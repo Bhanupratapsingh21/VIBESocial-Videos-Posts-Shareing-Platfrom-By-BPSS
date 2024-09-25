@@ -37,27 +37,38 @@ Vibe Social is an innovative and dynamic platform that blends the best of video 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/vibe-social.git
+   https://github.com/Bhanupratapsingh21/VIBESocial-Videos-Posts-Shareing-Platfrom-By-BPSS.git
    ```
 
 2. Navigate to the project directory:
    ```bash
-   cd vibe-social
+   cd to backend and fronend folders
    ```
 
 3. Install dependencies:
    ```bash
-   npm install
+   npm install in both folder
    ```
 
 4. Set up environment variables:
    Create a `.env` file in the root and add the following variables:
+   Backend in env.sample look for the env's
    ```
-   MONGODB_URI=your_mongodb_uri
-   JWT_SECRET=your_jwt_secret
-   CLOUDINARY_API_KEY=your_cloudinary_api_key
-   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
-   CLOUDINARY_NAME=your_cloudinary_name
+   PORT= 8000
+   MONGODB_URI=mongodb+srv://username:password@cluster0.vrxy93a.mongodb.net/
+   CORS_ORIGIN=*
+   ACCESS_TOKEN_SECRET=
+   ACCESS_TOKEN_EXPIRY=
+   REFRESH_TOKEN_SECRET=
+   REFRESH_TOKEN_EXPIRY=
+   CLOUDINARY_CLOUD_NAME=
+   CLOUDINARY_API_KEY=
+   CLOUDINARY_API_SECRET=
+   ```
+   Frontend Env
+   ```
+   VITE_URL=http://localhost:portofbackend
+   VITE_CLOUDINARY_CLOUD_NAME=
    ```
 
 5. Start the development server:
@@ -65,7 +76,7 @@ Vibe Social is an innovative and dynamic platform that blends the best of video 
    npm run dev
    ```
 
-6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+6. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ## Future Enhancements
 
