@@ -1,6 +1,7 @@
 ---
 
-# Vibe Social: Share Videos and Tweets
+# Vibe Social: Share Videos and Tweet's
+
 
 Vibe Social is an innovative and dynamic platform that blends the best of video sharing and social networking. It allows users to share and discover videos and tweets within a vibrant community. Built using a modern tech stack, Vibe Social provides a seamless user experience with rich features designed to engage and entertain.
 
