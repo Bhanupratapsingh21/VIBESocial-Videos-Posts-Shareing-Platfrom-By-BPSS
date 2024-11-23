@@ -84,6 +84,7 @@ const getChannelVideos = asyncHandeler(async (req, res) => {
                     duration: 1,
                     views: 1,
                     isPublished: 1,
+                    status: 1,
                     tegs: 1,
                     owner: 1,
                     ownerusername: "$ownerDetails.username",
@@ -100,7 +101,7 @@ const getChannelVideos = asyncHandeler(async (req, res) => {
             return res.status(404).json(new ApiError(404, {}, "No Videos Found"));
         }
 
-        const totalVideos = await Video.countDocuments({ owner: new mongoose.Types.ObjectId(channelId), isPublished: true });
+        const totalVideos = await Video.countDocuments({ owner: new mongoose.Types.ObjectId(channelId) });
         const totalPages = Math.ceil(totalVideos / limitOptions);
 
         return res.status(200).json(new ApiResponse(200, {
@@ -225,7 +226,7 @@ const getChannelVideospublic = asyncHandeler(async (req, res) => {
 
     try {
         const aggregationPipeline = [
-            { $match: { owner: new mongoose.Types.ObjectId(channelId), isPublished: true } }, // Match by channel ID and only published videos
+            { $match: { owner: new mongoose.Types.ObjectId(channelId), isPublished: true, status: "Done", } }, // Match by channel ID and only published videos
             { $skip: skip }, // Pagination: Skip records
             { $limit: limitOptions }, // Pagination: Limit records
             {
@@ -263,7 +264,7 @@ const getChannelVideospublic = asyncHandeler(async (req, res) => {
             return res.status(404).json(new ApiError(404, {}, "No Videos Found"));
         }
 
-        const totalVideos = await Video.countDocuments({ owner: new mongoose.Types.ObjectId(channelId), isPublished: true });
+        const totalVideos = await Video.countDocuments({ owner: new mongoose.Types.ObjectId(channelId), status: "Done", isPublished: true });
         const totalPages = Math.ceil(totalVideos / limitOptions);
 
         return res.status(200).json(new ApiResponse(200, {

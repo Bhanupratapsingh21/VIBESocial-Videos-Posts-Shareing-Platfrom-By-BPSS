@@ -10,6 +10,8 @@ import { User } from "../models/user.model.js";
 import { like } from "../models/like.model.js";
 import { Subscription } from "../models/subscription.model.js";
 import checkServerAvailability from "../utils/checkforvideoencoder.js";
+import AWS from 'aws-sdk';
+import deleteFolderFromS3 from "../utils/deletefilesfroms3.js";
 
 const handleuploadvideo = asyncHandeler(async (req, res) => {
     const { tittle, description, isPublished, tegs } = req.body;
@@ -262,7 +264,7 @@ const handlegetvideobytegs = asyncHandeler(async (req, res) => {
                         $options: 'i'
                     },
                     isPublished: true,
-                    status: "Done" 
+                    status: "Done"
                 }
             },
             { $sort: sortOption },
@@ -374,34 +376,61 @@ const updateVideodetails = asyncHandeler(async (req, res) => {
 
 })
 
+const extractPrefixFromS3Url = (s3Url) => {
+    try {
+        const url = new URL(s3Url); // Parse the URL
+        const path = url.pathname; // Extract the path (e.g., "/videos/672a36c9b395522089b5c3e1/240p.m3u8")
+
+        // Remove leading "/" and file name to get the folder
+        const folderPrefix = path.substring(1).replace(/\/[^/]*$/, '/'); // "videos/672a36c9b395522089b5c3e1/"
+
+        return folderPrefix;
+    } catch (error) {
+        console.error("Invalid S3 URL:", s3Url, error);
+        throw new Error("Failed to extract prefix from S3 URL");
+    }
+};
+
+
+// Updated delete video handler
 const handledeleteVideo = asyncHandeler(async (req, res) => {
-    const _id = req.params.id
+    const _id = req.params.id;
 
     const video = await Video.findById(_id);
-    if (!video) return res.status(404).json(new ApiError(404, {}, "Your Requested Video Not Founded"));
-    // console.log(video.owner)
-    // console.log(req.user._id)
+    if (!video) return res.status(404).json(new ApiError(404, {}, "Your Requested Video Not Found"));
+
     const verifyowner = verifypostowner(video.owner, req.user._id);
     if (!verifyowner) {
-        return res.status(401).json(new ApiError(401, {}, "You Are Not The Owner Of This Video"))
+        return res.status(401).json(new ApiError(401, {}, "You Are Not The Owner Of This Video"));
     }
 
-    const deletedvideo = await Video.findByIdAndDelete(_id)
-    if (!deletedvideo) {
+    const deletedVideo = await Video.findByIdAndDelete(_id)
+    if (!deletedVideo) {
         return res.status(404).json(new ApiResponse(404, {}, "Some Error Occerd While Deleteing Video"));
     }
-    const videopublicid = extractIdfromurl(deletedvideo.videoFile)
-    const thumbnailpublicid = extractIdfromurl(deletedvideo.thumbnail)
-    // console.log(videopublicid)
-    // console.log(thumbnailpublicid)
-    const videodeletefromcloud = await videodeletefromcloudinary(videopublicid)
-    const thumbnaildeletefromcloud = await deletefromcloudinary(thumbnailpublicid)
+    //console.log(deletedVideo.videoFile.cloudinaryUrl);
+    // Extract the prefix (folder) from the encodedUrl for video files
+    const url720p = deletedVideo.videoFile.encodedUrl.get("720p");
+    const videoFolderPrefix = extractPrefixFromS3Url(url720p);
+    //console.log(url720p);
 
-    // console.log(videodeletefromcloud, thumbnaildeletefromcloud)
+    // Delete the entire folder in S3
+    try {
 
-    return res.status(200).json(new ApiResponse(200, {}, "Video Deleted SuccssFully"))
+        deleteFolderFromS3(videoFolderPrefix);
+       
+        const videopublicid = extractIdfromurl(deletedVideo.videoFile.cloudinaryUrl);
+        const thumbnailpublicid = extractIdfromurl(deletedVideo.thumbnail);
 
-})
+        videodeletefromcloudinary(videopublicid);
+        deletefromcloudinary(thumbnailpublicid);
+       
+    } catch (error) {
+        return res.status(500).json(new ApiResponse(500, {}, "Error Deleting Files From S3"));
+    }
+
+    return res.status(200).json(new ApiResponse(200, {}, "Video Deleted Successfully"));
+});
 
 const togglePublishStatus = asyncHandeler(async (req, res) => {
     const videoId = req.params.id

@@ -172,7 +172,7 @@ function IndividualVideo() {
             videoData.video.videoFile.cloudinaryUrl = extractIdFromUrl(videoData?.video.videoFile.cloudinaryUrl);
             setVideo(videoData);
             setm3u8url(videoData.video.videoFile.encodedUrl)
-            console.log(videoData)
+            // console.log(videoData)
             setlikestate(videoData.likebyuserstate);
             setlikecount(videoData.LikeCount);
             setsubscount(videoData.totalSubs);

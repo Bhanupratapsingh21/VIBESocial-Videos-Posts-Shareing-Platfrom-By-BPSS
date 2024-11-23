@@ -1,7 +1,9 @@
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect, useState ,useRef} from 'react';
 import { useSelector } from 'react-redux';
+import M3u8Videoplayer from "../Components/M3u8Videoplayer";
+import videojs from "video.js";
 import VideoPlayer from '../Components/Videoplayer';
 import {
     Accordion,
@@ -16,6 +18,9 @@ import {
 import Headertwo from '../Components/Header2';
 
 function Editvideo() {
+    const [iscloudinary, setiscloudinary] = useState(false);
+    const [m3u8url, setm3u8url] = useState("");
+    const [resolution, setresolution] = useState("720p")
     const { videoid } = useParams();
     const [video, setVideo] = useState({});
     const [error, setError] = useState(false);
@@ -38,9 +43,9 @@ function Editvideo() {
             if (videoData.video.owner !== userdata._id) {
                 navigate(`/video/${videoData.video._id}`);
             } else {
-                videoData.video.videoFile = extractIdFromUrl(videoData?.video.videoFile);
+                videoData.video.videoFile.cloudinaryUrl = extractIdFromUrl(videoData?.video.videoFile.cloudinaryUrl);
                 setIsChecked(videoData?.video.isPublished)
-
+                setm3u8url(videoData.video.videoFile.encodedUrl)
                 setVideo(videoData);
                 // console.log(video)
             }
@@ -136,6 +141,33 @@ function Editvideo() {
         }
     };
 
+    // m3u8 pleyer confs
+    const playerRef = useRef(null);
+
+    const videoPlayerOptions = {
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources: [
+            {
+                src: m3u8url[resolution.toString()],
+                type: "application/x-mpegURL"
+            }
+        ]
+    };
+
+    const handlePlayerReady = (player) => {
+        playerRef.current = player;
+
+        player.on("waiting", () => {
+            videojs.log("player is waiting");
+        });
+
+        player.on("dispose", () => {
+            videojs.log("player will dispose");
+        });
+    };
+
     return (
         <>
             <Headertwo />
@@ -158,7 +190,11 @@ function Editvideo() {
                 {!loading && !error && video && (
                     <>
                         <div>
-                            <VideoPlayer videopublicId={video.video.videoFile} thumbnail={video.video.thumbnail} />
+                            {iscloudinary ?
+                                <VideoPlayer videopublicId={video.video.videoFile.cloudinaryUrl} thumbnail={video.video.thumbnail} />
+                                :
+                                <M3u8Videoplayer options={videoPlayerOptions} onReady={handlePlayerReady} />
+                            }
                             <div className="flex cursor-pointer mt-2 mb-2 items-center justify-between p-1 text-slate-400">
                                 <label htmlFor="video-published">Video Published (Is Published?)</label>
                                 <div className="relative inline-block">
@@ -172,6 +208,56 @@ function Editvideo() {
                                     <span className="pointer-events-none absolute left-1 top-1 block h-4 w-4 rounded-full bg-slate-600 transition-all duration-200 peer-checked:left-7 peer-checked:bg-green-300"></span>
                                 </div>
                             </div>
+                            <div className="flex justify-center items-center w-full py-2 gap-2  rounded-lg">
+
+                                <button
+                                    onClick={() => setiscloudinary(false)}
+                                    href="#"
+                                    className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${!iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
+                                >
+                                    <div className="flex items-center">
+
+                                        <span className="ml-1 text-white">AWS M3U8 Server</span>
+                                    </div>
+                                </button>
+                                <button
+                                    onClick={() => setiscloudinary(true)}
+                                    href="#"
+                                    className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
+                                >
+                                    <div className="flex items-center">
+
+                                        <span className="ml-1 text-white">Cloudinary Server</span>
+                                    </div>
+                                </button>
+
+                            </div>
+                            {
+                                !iscloudinary && <div className="flex justify-center items-center w-full  gap-2  rounded-lg">
+                                    <button
+                                        onClick={() => setresolution("240p")}
+                                        className={`cursor-pointer w-full  ${resolution === "240p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                    >
+
+                                        240P
+                                    </button>
+                                    <button
+                                        onClick={() => setresolution("460p")}
+                                        className={`cursor-pointer w-full  ${resolution === "460p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                    >
+
+                                        420P
+                                    </button>
+                                    <button
+                                        onClick={() => setresolution("720p")}
+                                        className={`cursor-pointer w-full  ${resolution === "720p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                    >
+                                        720P
+                                    </button>
+
+                                </div>
+                            }
+
                             <Accordion className='border-t-white border-b-white  dark:border-t-black dark:border-b-black ' allowToggle={true}>
                                 <AccordionItem>
                                     <h2>
