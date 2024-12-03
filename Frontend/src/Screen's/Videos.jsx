@@ -51,9 +51,10 @@ function Videos() {
             <Headertwo />
             <div className="mb-4">
                 <VideosLeyout videodata={data} />
+                {data.length === 0 && !loading && <h2 className="flex justify-center font-bold text-xl items-center">We Don't Have Any Videos Currently</h2>}
                 {loading && <Loadingvideo totalno={9} />}
                 <div ref={lastVideoElementRef} />
-                {error && <div className="flex justify-center items-center">Error loading videos. Please try again later.</div>}
+                {error && <div className="flex justify-center font-bold text-xl items-center">Error loading videos. Please try again later.</div>}
             </div>
 
         </>

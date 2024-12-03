@@ -123,9 +123,9 @@ function Searchforall() {
         <>
             <Tabs isFitted variant='enclosed'>
                 <TabList mb='1em'>
-                    <Tab>Video's</Tab>
-                    <Tab>Tweets</Tab>
-                    <Tab>Users</Tab>
+                    <Tab className="text-lg font-bold">Video's</Tab>
+                    <Tab className="text-lg font-bold">Tweets</Tab>
+                    <Tab className="text-lg font-bold">Users</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
@@ -142,7 +142,7 @@ function Searchforall() {
                         {
                             userdata.map((user) => (
                                 <Link to={`/user/userprofile/${user.username}`} key={user._id}>
-                                    <div className="sm:w-[65vw] flex justify-left items-center bg-clip-border rounded-xl dark:bg-black bg-white text-gray-700 dark:text-white shadow-md overflow-hidden xl:col-span-2">
+                                    <div className="sm:w-full flex justify-left items-center bg-clip-border rounded-xl dark:bg-black bg-white text-gray-700 dark:text-white shadow-md overflow-hidden xl:col-span-2">
                                         <div className="w-max flex justify-between bg-clip-border rounded-xl overflow-hidden bg-transparent shadow-none m-0 items-center p-6">
                                             <div>
                                                 <img className="rounded-full mr-5 w-10" src={user.avatar.url} alt="img" />

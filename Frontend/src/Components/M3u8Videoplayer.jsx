@@ -46,10 +46,10 @@ const M3u8VideoPlayer = (props) => {
   return (
     <div
       data-vjs-player
-      style={{ width: "600px"  }}
+      className='-ml-4 w-[100vw]  z-51 -mt-4 sm:w-[50vw]'
     >
       <div ref={videoRef} />
-    </div>
+    </div >
   );
 };
 

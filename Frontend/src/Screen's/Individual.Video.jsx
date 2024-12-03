@@ -1,6 +1,7 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import VideoPlayer from "../Components/Videoplayer";
-import { useEffect, useState, useRef } from "react";
+import React from "react"
+import { useEffect, useState, useRef, useMemo } from "react";
 import axios from 'axios';
 import M3u8Videoplayer from "../Components/M3u8Videoplayer";
 import videojs from "video.js";
@@ -41,8 +42,8 @@ function IndividualVideo() {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const observer = useRef();
-    const lastCommentElementRef = useRef();
-    //
+    const lastCommentElementRef = useRef(null);
+    const playerRef = useRef(null);
     const navigate = useNavigate();
     const [commenttext, setcommenttext] = useState("")
     const { isOpen: deletevideoisOpen, onOpen: deletevideoonOpen, onClose: deletevideoononClose } = useDisclosure()
@@ -353,19 +354,17 @@ function IndividualVideo() {
         }
     }, [video]);
 
-    const playerRef = useRef(null);
-
-    const videoPlayerOptions = {
+    const videoPlayerOptions = useMemo(() => ({
         controls: true,
         responsive: true,
         fluid: true,
-        sources: [
-            {
-                src: m3u8url[resolution.toString()],
-                type: "application/x-mpegURL"
-            }
-        ]
-    };
+        sources: [{
+            src: m3u8url[resolution.toString()],
+            type: "application/x-mpegURL"
+        }]
+    }), [m3u8url, resolution]);
+
+    const MemoizedM3u8Videoplayer = React.memo(M3u8Videoplayer);
 
     const handlePlayerReady = (player) => {
         playerRef.current = player;
@@ -404,14 +403,14 @@ function IndividualVideo() {
                             {iscloudinary ?
                                 <VideoPlayer videopublicId={video.video.videoFile.cloudinaryUrl} thumbnail={video.video.thumbnail} />
                                 :
-                                <M3u8Videoplayer options={videoPlayerOptions} onReady={handlePlayerReady} />
+                                <MemoizedM3u8Videoplayer options={videoPlayerOptions} onReady={handlePlayerReady} />
                             }
 
                             <div>
 
-                                <div className="hidden lg:block lg:-mr-6 z-50 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
+                                <div className="hidden lg:block lg:-mr-6 z-54 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
                                     <div className="flex text-lg justify-between px-4 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
-                                        <h2>Comments</h2>
+                                        <h2 className="font-bold">Comments</h2>
                                         <div>
                                             <svg viewBox="0 0 360 360" className="mt-1 dark:fill-white" width={15} xml:space="preserve">
                                                 <g id="SVGRepo_iconCarrier">
@@ -425,15 +424,18 @@ function IndividualVideo() {
 
                                     </div>
                                     <div class="relative xl:w-80 mb-2 lg:w-[25vw] w-80 mt-2">
-                                        <form onSubmit={e => {
+                                        <form onSubmit={(e) => {
                                             e.preventDefault();
                                             postcomments();
                                         }}>
                                             <input
                                                 type="text"
                                                 placeholder="Add Comment"
-                                                class="block  lg:w-[24vw] w-80   rounded-2xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
-                                                onChange={(e) => setcommenttext(e.target.value)}
+                                                class="block font-bold lg:w-[24vw] w-80   rounded-xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950  placeholder:text-neutral-500 "
+                                                onChange={(e) => {
+                                                    e.preventDefault();
+                                                    setcommenttext(e.target.value);
+                                                }}
                                                 value={commenttext}
                                             />
                                         </form>
@@ -442,7 +444,7 @@ function IndividualVideo() {
                                                 type="submit"
                                                 onClick={postcomments}
                                                 aria-label="Submit"
-                                                class="flex aspect-square h-full items-center justify-center rounded-xl dark:bg-neutral-950 dark:text-white transition "
+                                                class="flex aspect-square h-full items-center justify-center rounded-xl dark:bg-neutral-950 dark:text-white  "
                                             >
                                                 {
                                                     commentpostloading ? (
@@ -506,7 +508,7 @@ function IndividualVideo() {
 
                                         <button
                                             onClick={() => setiscloudinary(false)}
-                                            href="#"
+
                                             className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${!iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
                                         >
                                             <div className="flex items-center">
@@ -516,7 +518,7 @@ function IndividualVideo() {
                                         </button>
                                         <button
                                             onClick={() => setiscloudinary(true)}
-                                            href="#"
+
                                             className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
                                         >
                                             <div className="flex items-center">
@@ -552,7 +554,7 @@ function IndividualVideo() {
                                         </div>
                                     }
 
-                                    <Accordion className="border-transparent -pt-7 hover:bg-white dark:hover:bg-black -ml-3" allowToggle={true}>
+                                    <Accordion className="border-transparent -pt-7  -ml-3" allowToggle={true}>
                                         <AccordionItem>
                                             <h2>
                                                 <AccordionButton>
@@ -646,7 +648,7 @@ function IndividualVideo() {
                                         </div>
                                     </div>
 
-                                    <div className="lg:hidden mt-5 z-50 -ml-2 sm:w-80 w-[100vw]">
+                                    <div className="lg:hidden mt-5 z-54 -ml-2 sm:w-80 w-[100vw]">
 
                                         <div className="flex text-lg justify-between px-4 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
                                             <h2>Comments</h2>

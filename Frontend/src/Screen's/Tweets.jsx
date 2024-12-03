@@ -71,9 +71,10 @@ function Tweets() {
         <>
             <Headertwo />
             <TweetsLeyout filterondelete={filterondelete} tweetsdata={data} />
+            {data.length === 0 && !loading && <h2 className="flex justify-center font-bold text-xl items-center">We Don't Have Any Tweets Currently</h2>}
             {loading && <Loadingvideo totalno={9} />}
             <div ref={lastTweetElementRef} />
-            {error && <div className="flex justify-center">Error loading tweets. Please try again later.</div>}
+            {error && <div className="flex justify-center font-bold text-xl items-center">Error loading Tweets. Please try again later.</div>}
         </>
     );
 }

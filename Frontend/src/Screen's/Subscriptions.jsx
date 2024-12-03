@@ -103,8 +103,8 @@ function Subscription() {
         <>
             <Tabs isFitted variant='enclosed'>
                 <TabList mb='1em'>
-                    <Tab>Subscribed</Tab>
-                    <Tab>Subscribers</Tab>
+                    <Tab className="font-bold text-lg">Subscribed</Tab>
+                    <Tab  className="font-bold text-lg">Subscribers</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
@@ -163,7 +163,7 @@ function Subscription() {
                         }
                         {
                             Subscribederror && (
-                                <div>{Subscribederror}</div>
+                                <div className="flex justify-center font-bold text-xl items-center">{Subscribederror}</div>
                             )
                         }
                         {loading && <div>Loading...</div>}
@@ -224,7 +224,7 @@ function Subscription() {
                         }
                         {
                             Subscribererror && (
-                                <div>{Subscribererror}</div>
+                                <div className="flex justify-center font-bold text-xl items-center">{Subscribererror}</div>
                             )
                         }
                         {loading && <div>Loading...</div>}
