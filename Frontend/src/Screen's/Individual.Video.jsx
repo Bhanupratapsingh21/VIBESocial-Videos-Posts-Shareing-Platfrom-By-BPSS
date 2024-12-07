@@ -25,8 +25,6 @@ import {
     AlertDialogCloseButton,
     useDisclosure
 } from "@chakra-ui/react";
-import 'videojs-hls-quality-selector';
-import 'videojs-hls-quality-selector/dist/videojs-hls-quality-selector.css';
 import CommentsLayout from "../Components/Comments.leylot";
 import LoadingComment from "../Components/Commentsloader";
 import Headertwo from "../Components/Header2";
