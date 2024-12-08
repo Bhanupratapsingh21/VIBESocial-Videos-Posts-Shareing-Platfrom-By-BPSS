@@ -1,7 +1,10 @@
 import { useNavigate, useParams, Link } from "react-router-dom";
 import VideoPlayer from "../Components/Videoplayer";
-import { useEffect, useState, useRef } from "react";
+import React from "react"
+import { useEffect, useState, useRef, useMemo } from "react";
 import axios from 'axios';
+import M3u8Videoplayer from "../Components/M3u8Videoplayer";
+import videojs from "video.js";
 import { useSelector } from 'react-redux'
 import {
     useToast,
@@ -22,7 +25,6 @@ import {
     AlertDialogCloseButton,
     useDisclosure
 } from "@chakra-ui/react";
-
 import CommentsLayout from "../Components/Comments.leylot";
 import LoadingComment from "../Components/Commentsloader";
 import Headertwo from "../Components/Header2";
@@ -31,14 +33,15 @@ import Loadingvideo from "../Components/Videosloading";
 function IndividualVideo() {
     const toast = useToast();
     // for comments 
+    const [iscloudinary, setiscloudinary] = useState(false);
     const [comments, setComments] = useState([]);
     const [commentsloading, setcommentsLoading] = useState(true);
     const [commentserror, setcommentsError] = useState(false);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const observer = useRef();
-    const lastCommentElementRef = useRef();
-    //
+    const lastCommentElementRef = useRef(null);
+    const playerRef = useRef(null);
     const navigate = useNavigate();
     const [commenttext, setcommenttext] = useState("")
     const { isOpen: deletevideoisOpen, onOpen: deletevideoonOpen, onClose: deletevideoononClose } = useDisclosure()
@@ -52,6 +55,8 @@ function IndividualVideo() {
     const [likecount, setlikecount] = useState(0);
     const [likestate, setlikestate] = useState(false);
     const [video, setVideo] = useState({});
+    const [m3u8url, setm3u8url] = useState("");
+    const [resolution, setresolution] = useState("720p")
     const [commentpostloading, setcommentpostloading] = useState(false);
     const fetchComments = async (page) => {
         try {
@@ -162,10 +167,11 @@ function IndividualVideo() {
             const response = await axios.get(`${import.meta.env.VITE_URL}/api/v1/videos/getvideo/${videoid}`, { withCredentials: true });
             //console.log(response)
             const videoData = response.data.data;
-            //console.log(videoData)
-            videoData.video.videoFile = extractIdFromUrl(videoData?.video.videoFile);
-            setVideo(videoData);
 
+            videoData.video.videoFile.cloudinaryUrl = extractIdFromUrl(videoData?.video.videoFile.cloudinaryUrl);
+            setVideo(videoData);
+            setm3u8url(videoData.video.videoFile.encodedUrl)
+            // console.log(videoData)
             setlikestate(videoData.likebyuserstate);
             setlikecount(videoData.LikeCount);
             setsubscount(videoData.totalSubs);
@@ -346,6 +352,30 @@ function IndividualVideo() {
         }
     }, [video]);
 
+    const videoPlayerOptions = useMemo(() => ({
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources: [{
+            src: m3u8url[resolution.toString()],
+            type: "application/x-mpegURL"
+        }]
+    }), [m3u8url, resolution]);
+
+    const MemoizedM3u8Videoplayer = React.memo(M3u8Videoplayer);
+
+    const handlePlayerReady = (player) => {
+        playerRef.current = player;
+
+        player.on("waiting", () => {
+            videojs.log("player is waiting");
+        });
+
+        player.on("dispose", () => {
+            videojs.log("player will dispose");
+        });
+    };
+
 
     return (
         <>
@@ -368,12 +398,17 @@ function IndividualVideo() {
                 {!loading && !error && video && (
                     <>
                         <div className="lg:flex ">
-                            <VideoPlayer videopublicId={video.video.videoFile} thumbnail={video.video.thumbnail} />
+                            {iscloudinary ?
+                                <VideoPlayer videopublicId={video.video.videoFile.cloudinaryUrl} thumbnail={video.video.thumbnail} />
+                                :
+                                <MemoizedM3u8Videoplayer options={videoPlayerOptions} onReady={handlePlayerReady} />
+                            }
+
                             <div>
 
-                                <div className="hidden lg:block lg:-mr-6 z-50 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
+                                <div className="hidden lg:block lg:-mr-6 z-54 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
                                     <div className="flex text-lg justify-between px-4 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
-                                        <h2>Comments</h2>
+                                        <h2 className="font-bold">Comments</h2>
                                         <div>
                                             <svg viewBox="0 0 360 360" className="mt-1 dark:fill-white" width={15} xml:space="preserve">
                                                 <g id="SVGRepo_iconCarrier">
@@ -387,15 +422,18 @@ function IndividualVideo() {
 
                                     </div>
                                     <div class="relative xl:w-80 mb-2 lg:w-[25vw] w-80 mt-2">
-                                        <form onSubmit={e => {
+                                        <form onSubmit={(e) => {
                                             e.preventDefault();
                                             postcomments();
                                         }}>
                                             <input
                                                 type="text"
                                                 placeholder="Add Comment"
-                                                class="block  lg:w-[24vw] w-80   rounded-2xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
-                                                onChange={(e) => setcommenttext(e.target.value)}
+                                                class="block font-bold lg:w-[24vw] w-80   rounded-xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950  placeholder:text-neutral-500 "
+                                                onChange={(e) => {
+                                                    e.preventDefault();
+                                                    setcommenttext(e.target.value);
+                                                }}
                                                 value={commenttext}
                                             />
                                         </form>
@@ -404,7 +442,7 @@ function IndividualVideo() {
                                                 type="submit"
                                                 onClick={postcomments}
                                                 aria-label="Submit"
-                                                class="flex aspect-square h-full items-center justify-center rounded-xl dark:bg-neutral-950 dark:text-white transition "
+                                                class="flex aspect-square h-full items-center justify-center rounded-xl dark:bg-neutral-950 dark:text-white  "
                                             >
                                                 {
                                                     commentpostloading ? (
@@ -464,7 +502,57 @@ function IndividualVideo() {
                             }
                             <div className="px-2 py-0">
                                 <div>
-                                    <Accordion className="border-transparent -pt-7 hover:bg-white dark:hover:bg-black -ml-3" allowToggle={true}>
+                                    <div className="flex justify-center items-center w-full py-2 gap-2  rounded-lg">
+
+                                        <button
+                                            onClick={() => setiscloudinary(false)}
+
+                                            className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${!iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
+                                        >
+                                            <div className="flex items-center">
+
+                                                <span className="ml-1 text-white">AWS M3U8 Server</span>
+                                            </div>
+                                        </button>
+                                        <button
+                                            onClick={() => setiscloudinary(true)}
+
+                                            className={`flex w-full overflow-hidden items-center text-sm font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-black text-white shadow hover:bg-black/90 h-9 px-4 py-2  whitespace-pre md:flex group relative  justify-center gap-2 rounded-md transition-all duration-300 ease-out ${iscloudinary ? "ring-2 ring-black ring-offset-2" : ""} `}
+                                        >
+                                            <div className="flex items-center">
+
+                                                <span className="ml-1 text-white">Cloudinary Server</span>
+                                            </div>
+                                        </button>
+
+                                    </div>
+                                    {
+                                        !iscloudinary && <div className="flex justify-center items-center w-full  gap-2  rounded-lg">
+                                            <button
+                                                onClick={() => setresolution("240p")}
+                                                className={`cursor-pointer w-full  ${resolution === "240p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                            >
+
+                                                240P
+                                            </button>
+                                            <button
+                                                onClick={() => setresolution("460p")}
+                                                className={`cursor-pointer w-full  ${resolution === "460p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                            >
+
+                                                420P
+                                            </button>
+                                            <button
+                                                onClick={() => setresolution("720p")}
+                                                className={`cursor-pointer w-full  ${resolution === "720p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                            >
+                                                720P
+                                            </button>
+
+                                        </div>
+                                    }
+
+                                    <Accordion className="border-transparent -pt-7  -ml-3" allowToggle={true}>
                                         <AccordionItem>
                                             <h2>
                                                 <AccordionButton>
@@ -558,7 +646,7 @@ function IndividualVideo() {
                                         </div>
                                     </div>
 
-                                    <div className="lg:hidden mt-5 z-50 -ml-2 sm:w-80 w-[100vw]">
+                                    <div className="lg:hidden mt-5 z-54 -ml-2 sm:w-80 w-[100vw]">
 
                                         <div className="flex text-lg justify-between px-4 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
                                             <h2>Comments</h2>

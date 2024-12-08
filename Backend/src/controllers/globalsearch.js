@@ -26,7 +26,8 @@ const globalsearch = asyncHandeler(async (req, res) => {
                     tittle: {
                         $regex: s,
                         $options: 'i' // Case-insensitive search
-                    }
+                    },
+                    status: "Done"
                 }
             },
             { $skip: skip },
@@ -40,7 +41,8 @@ const globalsearch = asyncHandeler(async (req, res) => {
         const videos = await Video.aggregate(videoAggregationPipeline);
 
         const totalVideosCount = await Video.countDocuments({
-            tittle: { $regex: s, $options: 'i' }
+            tittle: { $regex: s, $options: 'i' },
+            status : "Done"
         });
 
         // Tweet Search
@@ -228,6 +230,7 @@ const handlesearchgetvideoadv = asyncHandeler(async (req, res) => {
         const aggregationPipeline = [
             {
                 $match: {
+                    status: "Done",
                     isPublished: true,
                     tittle: s ? { $regex: s, $options: 'i' } : { $exists: true }
                 }

@@ -20,6 +20,19 @@ import {
     Button,
 } from '@chakra-ui/react'
 
+import {
+    IconArrowLeft,
+    IconBrandStocktwits,
+    IconMenu2,
+    IconUpload,
+    IconLogout2,
+    IconHistory,
+    IconBrandStripe,
+    IconPlaylist,
+    IconVideoPlus,
+    IconDatabaseImport,
+    IconHome,
+} from "@tabler/icons-react";
 import { useSelector } from 'react-redux';
 import { extendTheme } from "@chakra-ui/react";
 import { useDispatch } from 'react-redux'
@@ -199,7 +212,7 @@ function Header() {
         });
 
         try {
-            const res = await axios.post(`${import.meta.env.VITE_URL}/api/v1/users/login`, loginform, {
+            const res = await axios.post(`${import.meta.env.VITE_URL}/api/v1/users/login`, { ...loginform, email: loginform.username }, {
                 withCredentials: true
             });
 
@@ -360,42 +373,47 @@ function Header() {
 
     return (
         <>
-            <header className="fixed w-full sm:ml-[570px]  bg-white dark:bg-black dark:text-white  z-10">
-                <div className="bg-white sm:w-[50vw] w-[100vw] px-2  h-20 flex items-center justify-between  sm:px-8 dark:bg-black dark:text-white text-black">
-                    <label className='sm:hidden block -mr-4'>
-                        <div
-                            class="w-9 h-20 cursor-pointer flex flex-col items-center justify-center"
-                            onClick={onOpen}
-                        >
-                            <input class="hidden peer" type="checkbox" />
-                            <div
-                                class="w-[70%] h-[4px] mb-1 dark:bg-white bg-black rounded-sm "
-                            ></div>
-                            <div
-                                class="w-[70%] h-[4px] mb-1 dark:bg-white bg-black rounded-md "
-                            ></div>
-                            <div
-                                class="w-[70%] h-[4px] dark:bg-white bg-black rounded-md "
-                            ></div>
-                        </div>
-                    </label>
-                    <div class="-mr-4 sm:mr-0  items-center justify-center xl:p-5">
-                        <div>
-                            <div class="flex sm:mr-5  border dark:border-slate-800 rounded-lg dark:bg-slate-700 bg-white border-gray-400">
+            <header className="fixed w-full sm:ml-[500px]  bg-cyan-200 dark:bg-black dark:text-white  z-10">
 
-                                <form className='flex items-center justify-left' onSubmit={handlesearchsubmit}>
-                                    <input value={searchText} onChange={handleSearchText} placeholder="Search" type="text" className="md:w-[25vw] w-[55vw] sm:w-[25vw] lg:w-[40vw] xl:w-[50vw] focus:border-transparent focus:outline-none dark:bg-slate-700 border-transparent mr-1 pl-2 dark:text-white text-black font-semibold outline-0" id="" />
+                <div className="sm:w-[50vw] w-[100vw] px-2 h-20 flex items-center md:gap-32 justify-between  sm:px-8 dark:bg-black dark:text-white text-black">
+
+                    <IconMenu2 onClick={onOpen} className="md:hidden  text-black-700 right-2 dark:text-neutral-200 h-10 w-10 flex-shrink-0" />
+
+                    <div class="items-center justify-center xl:p-5">
+                        <div className="flex items-center justify-center">
+                            <div className="flex w-full md:w-[45vw] min-w-[70vw] sm:min-w-[45vw] lg:w-[40vw] xl:w-[50vw] duration-[500ms] border dark:border-gray-700 border-gray-300 bg-gradient-to-r from-gray-100/50 to-gray-300/50 dark:from-gray-800/50 dark:to-gray-900/50 backdrop-blur-lg rounded-lg shadow-md hover:shadow-lg transition-all">
+
+                                {/* Search Input */}
+                                <form className="flex items-center w-full" onSubmit={handlesearchsubmit}>
+                                    <input
+                                        value={searchText}
+                                        onChange={handleSearchText}
+                                        placeholder="Search"
+                                        type="text"
+                                        className="flex-1 bg-transparent w-full focus:outline-none px-4 py-2 text-sm sm:text-base dark:text-white text-gray-800 placeholder-gray-400 dark:placeholder-gray-600"
+                                    />
                                 </form>
-                                <div onClick={handlesearchsubmit} class="flex w-10 items-center justify-center rounded-tr-lg rounded-br-lg border-l dark:border-slate-800 dark:bg-slate-700 border-gray-200 p-5">
-                                    <svg viewBox="0 0 20 20" aria-hidden="true" class="pointer-events-none absolute w-5 fill-gray-500 transition">
+
+                                {/* Search Button */}
+                                <button
+                                    onClick={handlesearchsubmit}
+                                    className="flex items-center justify-center w-10 h-10 rounded-tr-lg rounded-br-lg bg-gradient-to-r from-indigo-500 to-cyan-500 dark:from-purple-600 dark:to-blue-600 hover:from-indigo-600 hover:to-cyan-600 dark:hover:from-purple-700 dark:hover:to-blue-700 transition-all text-white"
+                                >
+                                    <svg
+                                        viewBox="0 0 20 20"
+                                        aria-hidden="true"
+                                        className="w-6 h-6"
+                                    >
                                         <path d="M16.72 17.78a.75.75 0 1 0 1.06-1.06l-1.06 1.06ZM9 14.5A5.5 5.5 0 0 1 3.5 9H2a7 7 0 0 0 7 7v-1.5ZM3.5 9A5.5 5.5 0 0 1 9 3.5V2a7 7 0 0 0-7 7h1.5ZM9 3.5A5.5 5.5 0 0 1 14.5 9H16a7 7 0 0 0-7-7v1.5Zm3.89 10.45 3.83 3.83 1.06-1.06-3.83-3.83-1.06 1.06ZM14.5 9a5.48 5.48 0 0 1-1.61 3.89l1.06 1.06A6.98 6.98 0 0 0 16 9h-1.5Zm-1.61 3.89A5.48 5.48 0 0 1 9 14.5V16a6.98 6.98 0 0 0 4.95-2.05l-1.06-1.06Z"></path>
                                     </svg>
-                                </div>
+                                </button>
+
                             </div>
                         </div>
-                        <div className="searchbox flex flex-col sm:ml-11 items-left absolute md:w-[25vw] sm:w-[25vw] lg:w-[40vw] xl:w-[50vw] z-51">
+
+                        <div className="searchbox flex flex-col mt-2 items-left absolute md:w-[25vw] sm:w-[25vw] lg:w-[40vw] xl:w-[50vw] z-51">
                             {
-                                debouncingData.map((element) => (
+                                debouncingData.slice(0, 9).map((element) => (
                                     <div onClick={() => handleclickondeboucneitem(element.tittle || element.username || element.content)} className='p-2 border rounded-lg'>
                                         {element.tittle || element.username || element.content}
                                     </div>
@@ -406,19 +424,18 @@ function Header() {
                             }
                         </div>
                     </div>
-                    <div className='sm:block hidden'>
-                        <label className="switch">
-                            <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
-                            <span className="slider round"></span>
-                        </label>
-                    </div>
-                    <article
-                        class="flex justify-center left-2 "
-                    >
+                    <div className="flex justify-center md:gap-2 align-end left-0 items-center">
+                        <div className='sm:block hidden mx-3'>
+                            <label className="switch">
+                                <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
+                                <span className="slider round"></span>
+                            </label>
+                        </div>
+
 
                         <label
                             for="profile"
-                            class="relative flex  w-full h-16 sm:p-4   group  flex-row gap-3 items-center justify-center text-black rounded-xl"
+                            class="relative flex  w-full h-16    group  flex-row gap-3 items-center justify-center text-black rounded-xl"
                         >
 
                             {
@@ -427,7 +444,7 @@ function Header() {
                                     <>
                                         <svg
                                             onClick={onOpenLogin}
-                                            class="peer-hover/expand:scale-125 dark:fill-white peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400"
+                                            className="peer-hover/expand:scale-125  dark:fill-white peer-hover/expand:text-blue-400 peer-hover/expand:fill-blue-400"
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="24"
                                             height="24"
@@ -441,7 +458,7 @@ function Header() {
                                 ) : (
 
                                     <Link to={`/user/userprofile/${userdata?.username}`}>
-                                        <div className='z-88 ml-5 w-[30px] relative text-white'>
+                                        <div className='z-88  w-[30px] relative text-white'>
                                             <img className='relative w-[30px] h-[30px] rounded-2xl text-white' src={userdata.avatar.url} alt="img" />
                                         </div>
                                     </Link>
@@ -476,8 +493,7 @@ function Header() {
                                 </svg>
                             </label>
                         </Link>
-
-                    </article>
+                    </div>
                 </div>
             </header>
             <div>
@@ -492,96 +508,119 @@ function Header() {
                     <DrawerContent className='-ml-4 border-r-2 '>
                         <DrawerCloseButton />
                         <DrawerHeader>
-                            <Link to={"/"} className="flex items-center justify-left pl-5 w-40 h-20">
-                                <h1 className="text-4xl uppercase text-indigo-500">&lt;/&gt;</h1>
+                            <Link to={"/"} className="flex px-10 mt-4 gap-2 items-center">
+                                <img className="w-10 h-10" src="/logohbhai.png" alt="" />
+                                <h1 class="text-3xl font-display font-bold text-primary-600">
+                                    VibeSocial
+                                </h1>
                             </Link>
                         </DrawerHeader>
 
                         <DrawerBody className="">
-                            <ul className="">
-                                <li className='flex px-4 justify-between items-center mb-4'>
-                                    DarkMode :
-                                    <label className="switch">
-                                        <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
-                                        <span className="slider round"></span>
-                                    </label>
-                                </li>
+                            <ul className="space-y-3">
                                 <li>
-                                    <Link to={"/"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl justify-left px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                        <span className="inline-flex items-center justify-center h-12  text-lg dark:text-white"><i className="bx bx-home"></i></span>
-                                        <span className="text-sm font-medium">Home</span>
+                                    <Link
+                                        to={"/"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconHome className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Home</span>
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to={"/upload"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                        <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-bell"></i></span>
-                                        <span className="text-sm font-medium">Upload</span>
+                                    <Link
+                                        to={"/upload"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconUpload className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Upload</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to={"/videos"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconVideoPlus className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Videos</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to={"/tweets"}
+                                        className="flex items-center px-4 py-3 rounded-lg dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconBrandStocktwits className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Tweets</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to={"/playlist"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconPlaylist className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
 
-                                    </Link  >
-                                </li>
-                                <li>
-                                    <Link to={"/videos"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                        <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-music"></i></span>
-                                        <span className="text-sm font-medium">Video's</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to={"/tweets"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                        <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-drink"></i></span>
-                                        <span className="text-sm font-medium">Tweet's</span>
+                                        <span className="ml-3 font-display font-bold text-primary-600">Playlists</span>
                                     </Link>
                                 </li>
 
-                                <li>
-                                    <Link to={"/playlist"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                        <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-chat"></i></span>
-                                        <span className="text-sm font-medium">Playlist's</span>
-                                    </Link>
-                                </li>
-                                {
-                                    status ? (
-                                        <>
-                                            <li>
-                                                <Link to={"/subscription"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                                    <span className="inline-flex items-center justify-center h-12 text-lg text-gray-400"><i className="bx bx-shopping-bag"></i></span>
-                                                    <span className="text-sm font-medium">Subscription's</span>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link to={"/watch-history"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                                    <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-chat"></i></span>
-                                                    <span className="text-sm font-medium">Watch-History</span>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <Link to={"/userchannelstatus"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform dark:text-white text-gray-900 hover:text-gray-500">
-                                                    <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-user"></i></span>
-                                                    <span className="text-sm font-medium">Channal Status</span>
-                                                </Link>
-                                            </li>
-                                            <li>
-                                                <div onClick={handlelogout} href="#" className="flex flex-row hover:border  px-4 hover:border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                                    <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-log-out"></i></span>
-                                                    <span className="text-sm font-medium">Logout</span>
-                                                </div  >
-                                            </li>
-                                        </>
+                                {/* Conditional Links */}
+                                {status && (
+                                    <>
+                                        <li>
+                                            <Link
+                                                to={"/subscription"}
+                                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                            >
+                                                <IconBrandStripe className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                                <span className="ml-3 font-display font-bold text-primary-600">Subscriptions</span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to={"/watch-history"}
+                                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                            >
+                                                <IconHistory className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                                <span className="ml-3 font-display font-bold text-primary-600">Watch History</span>
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link
+                                                to={"/userchannelstatus"}
+                                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                            >
+                                                <IconDatabaseImport className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                                <span className="ml-3 font-display font-bold text-primary-600">Channel Status</span>
+                                            </Link>
+                                        </li>
 
-                                    ) : null
-                                }
-                                <div className="text-blue-gray-600">
-                                    <footer className="py-2">
-                                        <div className="flex w-full flex-wrap items-center justify-center gap-6 pl-4 bottom-1 md:justify-between">
-                                            <p className="block antialiased font-sans text-sm leading-normal font-normal text-inherit"><span className='text-blue-500'>VIBESOCIAL</span> © 2024 Made With <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" aria-hidden="true" className="-mt-0.5 inline-block h-3.5 w-3.5">
-                                                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"></path>
-                                            </svg> by <a href="https://url-shortner-mern-uetd.onrender.com/Js0GzP6A" target="_blank" className="transition-colors hover:text-blue-500">BPSS </a></p>
-                                        </div>
-                                    </footer>
-                                </div>
+                                    </>
+                                )}
                             </ul>
                         </DrawerBody>
                         <DrawerFooter>
+                            <div className='flex px-4 w-full justify-between items-center mb-4'>
+                                DarkMode :
+                                <label className="switch">
+                                    <input type="checkbox" checked={isDarkMode} onChange={toggleDarkMode} />
+                                    <span className="slider round"></span>
+                                </label>
+                            </div>
+                            {status && (
+                                <>
 
+                                    <div
+                                        onClick={handlelogout}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500 cursor-pointer"
+                                    >
+                                        <IconLogout2 className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Logout</span>
+                                    </div>
+
+                                </>
+                            )}
                         </DrawerFooter>
                     </DrawerContent>
                 </Drawer>
@@ -590,10 +629,10 @@ function Header() {
                 <ModalOverlay />
                 <ModalContent>
                     <ModalCloseButton />
-                    <ModalBody>
+                    <ModalBody className="dark:bg-black p-0 bg-white">
                         {authtypelogin ? (
                             <div className="">
-                                <section className="rounded-md p-2 bg-white">
+                                <section className="rounded-md p-2 text-black dark:text-white dark:bg-black bg-white">
                                     <div className="flex items-center justify-center my-3">
                                         <div className="xl:mx-auto shadow-md p-4 xl:w-full xl:max-w-sm 2xl:max-w-md">
                                             <div className="mb-2"></div>
@@ -601,7 +640,7 @@ function Header() {
                                                 <span >Sign up</span> to Create
                                                 account
                                             </h2>
-                                            <p className="mt-2 text-base text-gray-600">
+                                            <p className="mt-2 text-base dark:text-white text-black">
                                                 Already have an account?{' '}
                                                 <span onClick={() => setauthtypelogin(false)}>Login-In</span>
 
@@ -612,7 +651,7 @@ function Header() {
                                                     <div>
 
                                                         {signinerror.status && <h2>{signinerror.msg}</h2>}
-                                                        <label className="text-base font-medium text-gray-900">
+                                                        <label className="text-base font-mediumtext-black dark:text-white">
                                                             Fullname
                                                         </label>
                                                         <div className="mt-2">
@@ -621,6 +660,7 @@ function Header() {
                                                                 type="text"
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="fullname"
+                                                                required
                                                                 value={registerForm.fullname}
                                                                 onChange={(e) =>
                                                                     setRegisterForm({
@@ -632,7 +672,7 @@ function Header() {
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className="text-base font-medium text-gray-900">
+                                                        <label className="text-base font-mediumtext-black dark:text-white">
                                                             User Name
                                                         </label>
                                                         <div className="mt-2">
@@ -641,6 +681,7 @@ function Header() {
                                                                 type="text"
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="username"
+                                                                required
                                                                 value={registerForm.username}
                                                                 onChange={(e) =>
                                                                     setRegisterForm({
@@ -652,13 +693,14 @@ function Header() {
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className="text-base font-medium text-gray-900">
+                                                        <label className="text-base font-mediumtext-black dark:text-white">
                                                             Email Address
                                                         </label>
                                                         <div className="mt-2">
                                                             <input
                                                                 placeholder="Email"
                                                                 type="email"
+                                                                required
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="email"
                                                                 value={registerForm.email}
@@ -673,7 +715,7 @@ function Header() {
                                                     </div>
                                                     <div>
                                                         <div className="flex items-center justify-between">
-                                                            <label className="text-base font-medium text-gray-900">
+                                                            <label className="text-base font-mediumtext-black dark:text-white">
                                                                 Password
                                                             </label>
                                                         </div>
@@ -683,6 +725,7 @@ function Header() {
                                                                 type="password"
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="password"
+                                                                required
                                                                 value={registerForm.password}
                                                                 onChange={(e) =>
                                                                     setRegisterForm({
@@ -694,7 +737,7 @@ function Header() {
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className="text-base font-medium text-gray-900">
+                                                        <label className="text-base font-medium text-black dark:text-white">
                                                             Avatar
                                                         </label>
                                                         <div className="mt-2">
@@ -702,6 +745,7 @@ function Header() {
                                                                 type="file"
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="avatar"
+                                                                required
                                                                 onChange={handleFileChange} // Ensure handleFileChange handles this input
                                                             />
                                                         </div>
@@ -709,7 +753,7 @@ function Header() {
 
                                                     <div>
                                                         <button
-                                                            className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-semibold leading-7 text-white hover:bg-black/80"
+                                                            className="inline-flex w-full text-white dark:text-black items-center justify-center rounded-md bg-black dark:bg-white px-3.5 py-2.5 font-semibold leading-7 dark:hover:bg-white/80 hover:bg-black/80"
                                                             type="submit"
                                                         >
                                                             Create Account
@@ -723,28 +767,28 @@ function Header() {
                             </div>
                         ) : (
                             <div className="">
-                                <section className="rounded-md p-2 bg-white">
+                                <section className="rounded-md p-2 text-black dark:text-white dark:bg-black bg-white">
                                     <div className="flex items-center justify-center my-3">
                                         <div className="xl:mx-auto shadow-md p-4 xl:w-full xl:max-w-sm 2xl:max-w-md">
                                             <div className="mb-2"></div>
                                             <h2 className="text-2xl font-bold leading-tight">
                                                 Already Have a Account Login
                                             </h2>
-                                            <p className="mt-2 text-base text-gray-600">
+                                            <p className="mt-2 text-base dark:text-white text-black">
                                                 Don't have a Account? {' '}
                                                 <span onClick={() => setauthtypelogin(true)}>Sign Up</span>
                                             </p>
 
                                             <form className="mt-5" onSubmit={handlesloginsubmit}>
                                                 <div className="space-y-4">
+
                                                     <div>
-                                                        {loginerror.status && <h2>{loginerror.msg}</h2>}
-                                                        <label className="text-base font-medium text-gray-900">
-                                                            User Name
+                                                        <label className="text-base font-mediumtext-black dark:text-white">
+                                                            Email address or Username
                                                         </label>
                                                         <div className="mt-2">
                                                             <input
-                                                                placeholder="Username"
+                                                                placeholder="Email Or Username"
                                                                 type="text"
                                                                 className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                                                                 name="username"
@@ -754,23 +798,8 @@ function Header() {
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className="text-base font-medium text-gray-900">
-                                                            Email address
-                                                        </label>
-                                                        <div className="mt-2">
-                                                            <input
-                                                                placeholder="Email"
-                                                                type="email"
-                                                                className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                                                                name="email"
-                                                                value={loginform.email}
-                                                                onChange={(e) => setloginform({ ...loginform, email: e.target.value })}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                    <div>
                                                         <div className="flex items-center justify-between">
-                                                            <label className="text-base font-medium text-gray-900">
+                                                            <label className="text-base font-mediumtext-black dark:text-white">
                                                                 Password
                                                             </label>
                                                         </div>

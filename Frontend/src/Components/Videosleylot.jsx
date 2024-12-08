@@ -136,29 +136,29 @@ function IndiVideo({ video, status, userdata }) {
         <>
             <div key={video._id}>
                 <div className="flex justify-between shadow-md flex-col dark:bg-black sm:w-[320px] w-[100vw] -ml-4 sm:ml-0 pb-3 sm:rounded-xl">
-                    <div onClick={() => handlenavigation(video._id)}>
+                    <div className="flex justify-center items-center" onClick={() => handlenavigation(video._id)}>
                         <img
-                            className="shadow-md sm:rounded-xl sm:w-max w-[100vw] h-max sm:h-48"
+                            className="shadow-sm sm:rounded-t-xl sm:w-max w-[100vw] h-max sm:h-48"
                             src={video.thumbnail}
                             onError={(e) => e.target.src = 'http://res.cloudinary.com/dhvkjanwa/image/upload/v1720186851/zrirfteydyrh79xaua3q.jpg'}
                             alt="Video Thumbnail"
                         />
                     </div>
-                    <div className="flex justify-between items-center pt-2 px-2 h-15 space-x-2">
-                        <Link className=' flex justify-left items-center' to={`/user/userprofile/${video.ownerusername}`}>
-                            <div className="flex w-13 mr-2">
-                                <img className="h-8 w-8 rounded-full" src={video.owneravatar} alt="img" />
+                    <div className="flex justify-between items-center pr-2 pt-2 h-16 space-x-2">
+                        <Link className='flex gap-1 justify-left items-center' to={`/user/userprofile/${video.ownerusername}`}>
+                            <div className="flex  px-2 ">
+                                <img className="h-10 max-w-10 max-h-10 w-10 rounded-full" src={video.owneravatar} alt="img" />
                             </div>
-                            <div className="space-y-1  flex flex-col justify-center max-w-[235px]">
-                                <div className="dark:text-white text-sm sm:text-base text-black overflow-hidden max-h-[45px] -mb-2 sm:-mb-0">{video.tittle}</div>
-                                <div className="flex dark:text-gray-400  justify-left text-sm sm:text-base items-center">
+                            <div className="flex flex-col gap-2 sm:gap-0 justify-center max-w-[235px]">
+                                <div className="dark:text-white text-sm sm:text-lg text-black overflow-hidden max-h-[45px] -mb-2 sm:-mb-0">{video.tittle}</div>
+                                <div className="flex dark:text-gray-400 font-medium justify-left text-sm sm:text-base items-center">
                                     <span className="max-w-[115px] max-h-[25px]  overflow-hidden">{video.ownerusername}</span>
-                                    <span className='px-2'> • </span>
+                                    <span className='px-1'> • </span>
                                     <span className="max-h-[25px]">{video.views} views</span>
                                 </div>
                             </div>
                         </Link>
-                        <svg onClick={openmodel} className="fill-current stroke-current w-5 h-5 rounded-full" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" width="100" x="0" xmlns="http://www.w3.org/2000/svg" y="0">
+                        <svg onClick={openmodel} className="fill-current  stroke-current w-5 h-5 rounded-full" preserveAspectRatio="xMidYMid meet" viewBox="0 0 100 100" width="100" x="0" xmlns="http://www.w3.org/2000/svg" y="0">
                             <path className="svg-stroke-primary" d="M50,17.4h0M50,50h0m0,32.6h0M50,22a4.7,4.7,0,1,1,4.7-4.6A4.7,4.7,0,0,1,50,22Zm0,32.7A4.7,4.7,0,1,1,54.7,50,4.7,4.7,0,0,1,50,54.7Zm0,32.6a4.7,4.7,0,1,1,4.7-4.7A4.7,4.7,0,0,1,50,87.3Z" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="8">
                             </path>
                         </svg>

@@ -493,77 +493,85 @@ const getWatchHistory = asyncHandeler(async (req, res) => {
     const limitOptions = parseInt(limit) || 10;
     const skip = (pageNumber - 1) * limitOptions;
 
-    const user = await User.aggregate([
-        {
-            $match: {
-                _id: new mongoose.Types.ObjectId(req.user._id)
-            }
-        },
-        { $skip: skip },
-        { $limit: limitOptions },
-        {
-            $lookup: {
-                from: "videos",
-                localField: "watchHistory",
-                foreignField: "_id",
-                as: "watchHistory"
-            }
-        },
-        {
-            $unwind: "$watchHistory"
-        },
-        {
-            $lookup: {
-                from: "users",
-                localField: "watchHistory.owner",
-                foreignField: "_id",
-                as: "ownerDetails"
-            }
-        },
-        {
-            $unwind: "$ownerDetails"
-        },
-        {
-            $project: {
-                "watchHistory._id": 1,
-                "watchHistory.videoFile": 1,
-                "watchHistory.thumbnail": 1,
-                "watchHistory.tittle": 1,
-                "watchHistory.description": 1,
-                "watchHistory.duration": 1,
-                "watchHistory.views": 1,
-                "watchHistory.isPublished": 1,
-                "watchHistory.tags": 1,
-                "watchHistory.owner": 1,
-                "watchHistory.ownerusername": "$ownerDetails.username",
-                "watchHistory.owneravatar": "$ownerDetails.avatar.url",
-                "watchHistory.createdAt": 1,
-                "watchHistory.updatedAt": 1
-            }
-        },
-        {
-            $group: {
-                _id: "$_id",
-                watchHistory: { $push: "$watchHistory" }
-            }
-        }
-    ]);
-
-    const totalVideos = req.user.watchHistory.length
-    const totalPages = Math.ceil(totalVideos / limitOptions);
-
-    return res.status(200)
-        .json(new ApiResponse(
-            200,
+    try {
+        const user = await User.aggregate([
             {
-                page: pageNumber,
-                limit: limitOptions,
-                totalPages,
-                totalVideos,
-                watchHistory: user[0].watchHistory,
+                $match: {
+                    _id: new mongoose.Types.ObjectId(req.user._id)
+                }
+            },
+            { $skip: skip },
+            { $limit: limitOptions },
+            {
+                $lookup: {
+                    from: "videos",
+                    localField: "watchHistory",
+                    foreignField: "_id",
+                    as: "watchHistory"
+                }
+            },
+            {
+                $unwind: "$watchHistory"
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "watchHistory.owner",
+                    foreignField: "_id",
+                    as: "ownerDetails"
+                }
+            },
+            {
+                $unwind: "$ownerDetails"
+            },
+            {
+                $project: {
+                    "watchHistory._id": 1,
+                    "watchHistory.videoFile": 1,
+                    "watchHistory.thumbnail": 1,
+                    "watchHistory.tittle": 1,
+                    "watchHistory.description": 1,
+                    "watchHistory.duration": 1,
+                    "watchHistory.views": 1,
+                    "watchHistory.isPublished": 1,
+                    "watchHistory.tags": 1,
+                    "watchHistory.owner": 1,
+                    "watchHistory.ownerusername": "$ownerDetails.username",
+                    "watchHistory.owneravatar": "$ownerDetails.avatar.url",
+                    "watchHistory.createdAt": 1,
+                    "watchHistory.updatedAt": 1
+                }
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    watchHistory: { $push: "$watchHistory" }
+                }
             }
-            , "Watch History Fetched Successfully"
-        ));
+        ]);
+
+        const totalVideos = req.user.watchHistory.length
+        const totalPages = Math.ceil(totalVideos / limitOptions);
+
+        return res.status(200)
+            .json(new ApiResponse(
+                200,
+                {
+                    page: pageNumber,
+                    limit: limitOptions,
+                    totalPages,
+                    totalVideos,
+                    watchHistory: user[0].watchHistory,
+                }
+                , "Watch History Fetched Successfully"
+            ));
+    } catch (error) {
+        return res.status(404)
+            .json(new ApiError(
+                404,
+                "Watch History Is Empty",
+            ));
+    }
 });
 
 export {

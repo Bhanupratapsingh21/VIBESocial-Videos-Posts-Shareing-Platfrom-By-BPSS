@@ -14,16 +14,20 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@reduxjs/toolkit": "^2.2.6",
+    "@tabler/icons-react": "^3.22.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "axios": "^1.7.2",
     "cloudinary-video-player": "^2.0.5",
-    "framer-motion": "^11.3.2",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.12.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-redux": "^9.1.2",
     "react-router": "^6.24.1",
     "react-router-dom": "^6.24.1",
-    "Router": "^2.1.0"
+    "Router": "^2.1.0",
+    "tailwind-merge": "^2.5.5",
+    "video.js": "^8.19.1"
   },
   "devDependencies": {
     "@types/react": "^18.3.3",

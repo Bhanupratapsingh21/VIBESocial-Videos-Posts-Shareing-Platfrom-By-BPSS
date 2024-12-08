@@ -73,14 +73,14 @@ function Userwatchhistory() {
             <Headertwo/>
             <div className="flex sm:mt-6 mt-6 mb-6 w-[85vw] sm:w-[70vw] items-center justify-between">
                 <div>
-                    <h2 className="text-4xl mb-6 sm:text-5xl font-bold text-black dark:text-gray-100">
+                    <h2 className="text-4xl mb-6 sm:text-5xl text-center font-bold text-black dark:text-gray-100">
                         Watch-History
                     </h2>
                     <p className='text-md sm:text-lg font-bold text-gray-100'></p>
                 </div>
             </div>
             {error.status && (
-                <p className="text-red-500">{error.msg}</p>
+                <p className="flex justify-center font-bold text-xl items-center text-red-500">{error.msg}</p>
             )}
             {loading && page === 1 ? (
                 <Loadingvideo totalno={9} />
@@ -90,6 +90,7 @@ function Userwatchhistory() {
             {isFetching && (
                 <div className="text-center mt-4 text-white">Loading more videos...</div>
             )}
+             {data.length === 0 && !loading && <h2 className="flex justify-center font-bold text-xl items-center">Pls Watch Videos</h2>}
         </>
     );
 }

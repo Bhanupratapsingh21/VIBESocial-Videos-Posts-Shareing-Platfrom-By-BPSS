@@ -6,6 +6,19 @@ import { AuthLogout } from '../Store/features/Slice';
 import axios from 'axios';
 import { useToast } from "@chakra-ui/react";
 
+import {
+    IconArrowLeft,
+    IconBrandStocktwits,
+    IconMenu2,
+    IconUpload,
+    IconLogout2,
+    IconHistory,
+    IconBrandStripe,
+    IconPlaylist,
+    IconVideoPlus,
+    IconDatabaseImport,
+    IconHome,
+} from "@tabler/icons-react";
 function Sidebar() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -46,94 +59,139 @@ function Sidebar() {
 
 
     return (
-        <aside className="fixed hidden sm:block left-0 top-0 h-screen w-[20vw] bg-white dark:bg-black rounded-r-3xl dark:text-white  z-10">
-            <div className="min-h-screen flex bg-gray-100 dark:bg-black">
-                <div className="hidden min-w-40 sm:flex flex-col  w-[20vw] bg-white dark:bg-black overflow-hidden">
-                    <Link to={"/"} className="flex items-center mt-1 pl-4 justify-center h-20">
-                        <h1 className="text-3xl uppercase text-indigo-500">&lt;VibeSocial/&gt;</h1>
+        <aside className="fixed hidden sm:block left-0 top-0 h-screen w-[21vw] bg-cyan-200  dark:bg-black text-black dark:text-white z-10">
+            <div className="min-h-screen flex flex-col bg-cyan-200 dark:bg-black">
+                {/* Top Section: Logo */}
+                <div className="flex items-center justify-start px-12 h-20">
+
+                    <Link to={"/"} className="flex mt-4 gap-2 items-center">
+                        <img className="w-10 h-10" src="/logohbhai.png" alt="" />
+                        <h1 class="text-3xl font-display font-bold text-primary-600">
+                            VibeSocial
+                        </h1>
                     </Link>
-                    <ul className="mt-4">
-
+                </div>
+                <div className="flex-1 mt-6 overflow-y-auto">
+                    <ul className="space-y-2">
                         <li>
-                            <Link to={"/"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl justify-left px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                <span className="inline-flex items-center justify-center h-12  text-lg dark:text-white"><i className="bx bx-home"></i></span>
-                                <span className="text-sm font-medium">Home</span>
+                            <Link
+                                to={"/"}
+                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                            >
+                                <IconHome className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                <span className="ml-3 font-display font-bold text-primary-600">Home</span>
                             </Link>
                         </li>
                         <li>
-                            <Link to={"/upload"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-bell"></i></span>
-                                <span className="text-sm font-medium">Upload</span>
-
-                            </Link  >
-                        </li>
-                        <li>
-                            <Link to={"/videos"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-music"></i></span>
-                                <span className="text-sm font-medium">Video's</span>
+                            <Link
+                                to={"/upload"}
+                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                            >
+                                <IconUpload className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                <span className="ml-3 font-display font-bold text-primary-600">Upload</span>
                             </Link>
                         </li>
                         <li>
-                            <Link to={"/tweets"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-drink"></i></span>
-                                <span className="text-sm font-medium">Tweet's</span>
+                            <Link
+                                to={"/videos"}
+                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                            >
+                                <IconVideoPlus className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                <span className="ml-3 font-display font-bold text-primary-600">Videos</span>
                             </Link>
                         </li>
-
                         <li>
-                            <Link to={"/playlist"} href="#" className="flex flex-row hover:border border-gray-600 rounded-3xl  px-4 items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-chat"></i></span>
-                                <span className="text-sm font-medium">Playlist's</span>
+                            <Link
+                                to={"/tweets"}
+                                className="flex items-center px-4 py-3 rounded-lg dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                            >
+                                <IconBrandStocktwits className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                <span className="ml-3 font-display font-bold text-primary-600">Tweets</span>
                             </Link>
                         </li>
-                        {
-                            status ? (
-                                <>
-                                    <li>
-                                        <Link to={"/subscription"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                            <span className="inline-flex items-center justify-center h-12 text-lg text-gray-400"><i className="bx bx-shopping-bag"></i></span>
-                                            <span className="text-sm font-medium">Subscription's</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to={"/watch-history"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                            <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-chat"></i></span>
-                                            <span className="text-sm font-medium">Watch-History</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to={"/userchannelstatus"} href="#" className="flex flex-row hover:border  px-4 border-gray-600 rounded-3xl items-center h-12 transform dark:text-white text-gray-900 hover:text-gray-500">
-                                            <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-user"></i></span>
-                                            <span className="text-sm font-medium">Channal Status</span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <div onClick={handlelogout} href="#" className="flex flex-row hover:border  px-4 hover:border-gray-600 rounded-3xl items-center h-12 transform  dark:text-white text-gray-900 hover:text-gray-500">
-                                            <span className="inline-flex items-center justify-center h-12  text-lg text-gray-400"><i className="bx bx-log-out"></i></span>
-                                            <span className="text-sm font-medium">Logout</span>
-                                        </div  >
-                                    </li>
-                                </>
+                        <li>
+                            <Link
+                                to={"/playlist"}
+                                className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                            >
+                                <IconPlaylist className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
 
-                            ) : null
-                        }
+                                <span className="ml-3 font-display font-bold text-primary-600">Playlists</span>
+                            </Link>
+                        </li>
+
+                        {/* Conditional Links */}
+                        {status && (
+                            <>
+                                <li>
+                                    <Link
+                                        to={"/subscription"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconBrandStripe className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Subscriptions</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to={"/watch-history"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconHistory className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Watch History</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to={"/userchannelstatus"}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500"
+                                    >
+                                        <IconDatabaseImport className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0" />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Channel Status</span>
+                                    </Link>
+                                </li>
+                                <li>
+                                    <div
+                                        onClick={handlelogout}
+                                        className="flex items-center px-4 py-3 rounded-lg  dark:text-white text-gray-900 hover:text-blue-500 dark:hover:text-blue-500 cursor-pointer"
+                                    >
+                                        <IconLogout2 className="text-black-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0"  />
+                                        <span className="ml-3 font-display font-bold text-primary-600">Logout</span>
+                                    </div>
+                                </li>
+                            </>
+                        )}
                     </ul>
-                    <div className="text-blue-gray-600">
-                        <footer className="py-2">
-                            <div className="flex w-full flex-wrap items-center justify-center gap-6 pl-4 bottom-1 md:justify-between">
-                                <p className="block antialiased font-sans text-sm leading-normal font-normal text-inherit"><span className='text-blue-500'>VIBESOCIAL</span> © 2024 Made With <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="red" aria-hidden="true" className="-mt-0.5 inline-block h-3.5 w-3.5">
-                                    <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"></path>
-                                </svg> by <a href="https://url-shortner-mern-uetd.onrender.com/Js0GzP6A" target="_blank" className="transition-colors hover:text-blue-500">BPSS </a></p>
-                            </div>
-                        </footer>
+                </div>
+
+                {/* Bottom Section: Footer */}
+                <footer className="">
+                    <div className="p-2 text-center">
+                        <p className="text-sm font-display font-bold text-primary-600 text-black dark:text-white">
+                            <span className="text-blue-500"></span>Made with{" "}
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="red"
+                                aria-hidden="true"
+                                className="inline-block w-4 h-4"
+                            >
+                                <path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0112 5.052 5.5 5.5 0 0116.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z"></path>
+                            </svg>{" "}
+                            by{" "}
+                            <a
+                                href="https://url-shortner-mern-uetd.onrender.com/Js0GzP6A"
+                                target="_blank"
+                                className="hover:text-blue-500"
+                            >
+                                BPSS
+                            </a>
+                        </p>
                     </div>
-                </div>
-                <div className='justify-center'>
-
-
-                </div>
+                </footer>
             </div>
         </aside>
+
     );
 }
 

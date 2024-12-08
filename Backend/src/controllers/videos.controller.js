@@ -2,80 +2,83 @@ import mongoose from "mongoose";
 import { asyncHandeler } from "../utils/asynchandeler.js";
 import { ApiError } from "../utils/apierror.js";
 import { ApiResponse } from "../utils/apiresponse.js";
+import axios from "axios";
 import { Video } from "../models/Video.model.js";
 import { deletefromcloudinary, videodeletefromcloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 import verifypostowner from "../utils/checkforpostowner.js";
 import { User } from "../models/user.model.js";
 import { like } from "../models/like.model.js";
 import { Subscription } from "../models/subscription.model.js";
+import checkServerAvailability from "../utils/checkforvideoencoder.js";
+import AWS from 'aws-sdk';
+import deleteFolderFromS3 from "../utils/deletefilesfroms3.js";
 
 const handleuploadvideo = asyncHandeler(async (req, res) => {
-    // get video uploaded at multer surver then 
-    // get video uploaded at cloudinary 
-    // get thumbnail uploaded at multer then cloudinary 
-    // create document of video 
-    // get duration from cloudinary 
-    // and all set 
-
-    const { tittle, description, isPublished, tegs } = req.body
+    const { tittle, description, isPublished, tegs } = req.body;
     if (!tittle || !description || !isPublished) {
-        return res
-            .status(400)
-            .json(new ApiError(400, {}, "All Field Required Atleast Tittle and Descriptions"))
+        return res.status(400).json(new ApiError(400, {}, "Title, Description, and Published status are required"));
     }
 
-
-    let videofilelocal;
+    let videofileLocal, thumbnailLocal;
     if (req.files && Array.isArray(req.files.videofile) && req.files.videofile.length > 0) {
-        videofilelocal = req.files.videofile[0]?.path
+        videofileLocal = req.files.videofile[0]?.path;
     }
-
-    let thumbnaillocal;
     if (req.files && Array.isArray(req.files.thumbnail) && req.files.thumbnail.length > 0) {
-        thumbnaillocal = req.files.thumbnail[0]?.path
+        thumbnailLocal = req.files.thumbnail[0]?.path;
     }
 
-    // console.log(videofile, thumbnail)
-    if (!videofilelocal || !thumbnaillocal) {
-        return res.status(401).json(new ApiError(401, {}, "Video File And Thumbnail Are Required"))
+    if (!videofileLocal || !thumbnailLocal) {
+        return res.status(400).json(new ApiError(400, {}, "Video File and Thumbnail are required"));
     }
+
     try {
-        // console.log("done")
-        const videofile = await uploadOnCloudinary(videofilelocal);
-        const thumbnail = await uploadOnCloudinary(thumbnaillocal);
+        const videofile = await uploadOnCloudinary(videofileLocal);
+        const thumbnail = await uploadOnCloudinary(thumbnailLocal);
 
         if (!videofile || !thumbnail) {
-            return res.status(501).json(new ApiError(501, {}, "An Error occurred While Uploading"))
+            return res.status(500).json(new ApiError(500, {}, "Error uploading video or thumbnail"));
         }
 
-        const UploadedVideo = await Video.create({
+        const uploadedVideo = await Video.create({
             tittle,
             description,
             isPublished,
             tegs,
-            videoFile: videofile.url,
+            status: "Waiting",
+            videoFile: {
+                cloudinaryUrl: videofile.url,
+                encodedUrl: ""
+            },
             thumbnail: thumbnail.url,
             duration: videofile.duration,
             views: 0,
             owner: req.user._id,
-        })
+        });
 
-        if (!UploadedVideo) {
-            return res
-                .status(501)
-                .json(new ApiError(501, {}, "internal Server Error"))
+        if (!uploadedVideo) {
+            return res.status(500).json(new ApiError(500, {}, "Error creating video record"));
         }
-        return res
-            .status(201)
-            .json(new ApiResponse(201, UploadedVideo, "Video Uploaded SuccessFully"));
+
+        res.status(201).json(new ApiResponse(201, uploadedVideo, "Video uploaded successfully"));
+
+        // Check for available server and start transcoding job asynchronously
+        (async () => {
+            const server = await checkServerAvailability();
+            if (server) {
+                try {
+                    await axios.post(`${server}/encoderjob`, { videoId: uploadedVideo._id });
+                } catch (error) {
+                    console.error("Error in video processing job", error);
+                }
+            }
+        })();
 
     } catch (error) {
-        console.log(error)
-        return res
-            .status(501)
-            .json(new ApiError(501, {}, "internal Server Error"))
+        console.error("Error during upload process", error);
+        return res.status(500).json(new ApiError(500, {}, "Internal server error"));
     }
 });
+
 
 const handlegetvideosbytimeline = asyncHandeler(async (req, res) => {
 
@@ -118,7 +121,12 @@ const handlegetvideoadv = asyncHandeler(async (req, res) => {
 
     try {
         const aggregationPipeline = [
-            { $match: { isPublished: true } }, // Match only published videos
+            {
+                $match: {
+                    isPublished: true, // Match only published videos
+                    status: "Done" // Only show videos that are done
+                }
+            }, // Match only published videos
             { $sort: sortOption }, // Sort based on sortOption
             { $skip: skip }, // Pagination: Skip records
             { $limit: limitOptions }, // Pagination: Limit records
@@ -141,7 +149,7 @@ const handlegetvideoadv = asyncHandeler(async (req, res) => {
                     duration: 1,
                     views: 1,
                     isPublished: 1,
-                    tags: 1,
+                    tegs: 1,
                     owner: 1,
                     ownerusername: "$ownerDetails.username",
                     owneravatar: "$ownerDetails.avatar.url",
@@ -255,7 +263,8 @@ const handlegetvideobytegs = asyncHandeler(async (req, res) => {
                         $regex: tagsArray.join('|'),
                         $options: 'i'
                     },
-                    isPublished: true
+                    isPublished: true,
+                    status: "Done"
                 }
             },
             { $sort: sortOption },
@@ -367,34 +376,61 @@ const updateVideodetails = asyncHandeler(async (req, res) => {
 
 })
 
+const extractPrefixFromS3Url = (s3Url) => {
+    try {
+        const url = new URL(s3Url); // Parse the URL
+        const path = url.pathname; // Extract the path (e.g., "/videos/672a36c9b395522089b5c3e1/240p.m3u8")
+
+        // Remove leading "/" and file name to get the folder
+        const folderPrefix = path.substring(1).replace(/\/[^/]*$/, '/'); // "videos/672a36c9b395522089b5c3e1/"
+
+        return folderPrefix;
+    } catch (error) {
+        console.error("Invalid S3 URL:", s3Url, error);
+        throw new Error("Failed to extract prefix from S3 URL");
+    }
+};
+
+
+// Updated delete video handler
 const handledeleteVideo = asyncHandeler(async (req, res) => {
-    const _id = req.params.id
+    const _id = req.params.id;
 
     const video = await Video.findById(_id);
-    if (!video) return res.status(404).json(new ApiError(404, {}, "Your Requested Video Not Founded"));
-    // console.log(video.owner)
-    // console.log(req.user._id)
+    if (!video) return res.status(404).json(new ApiError(404, {}, "Your Requested Video Not Found"));
+
     const verifyowner = verifypostowner(video.owner, req.user._id);
     if (!verifyowner) {
-        return res.status(401).json(new ApiError(401, {}, "You Are Not The Owner Of This Video"))
+        return res.status(401).json(new ApiError(401, {}, "You Are Not The Owner Of This Video"));
     }
 
-    const deletedvideo = await Video.findByIdAndDelete(_id)
-    if (!deletedvideo) {
+    const deletedVideo = await Video.findByIdAndDelete(_id)
+    if (!deletedVideo) {
         return res.status(404).json(new ApiResponse(404, {}, "Some Error Occerd While Deleteing Video"));
     }
-    const videopublicid = extractIdfromurl(deletedvideo.videoFile)
-    const thumbnailpublicid = extractIdfromurl(deletedvideo.thumbnail)
-    // console.log(videopublicid)
-    // console.log(thumbnailpublicid)
-    const videodeletefromcloud = await videodeletefromcloudinary(videopublicid)
-    const thumbnaildeletefromcloud = await deletefromcloudinary(thumbnailpublicid)
+    //console.log(deletedVideo.videoFile.cloudinaryUrl);
+    // Extract the prefix (folder) from the encodedUrl for video files
+    const url720p = deletedVideo.videoFile.encodedUrl.get("720p");
+    const videoFolderPrefix = extractPrefixFromS3Url(url720p);
+    //console.log(url720p);
 
-    // console.log(videodeletefromcloud, thumbnaildeletefromcloud)
+    // Delete the entire folder in S3
+    try {
 
-    return res.status(200).json(new ApiResponse(200, {}, "Video Deleted SuccssFully"))
+        deleteFolderFromS3(videoFolderPrefix);
+       
+        const videopublicid = extractIdfromurl(deletedVideo.videoFile.cloudinaryUrl);
+        const thumbnailpublicid = extractIdfromurl(deletedVideo.thumbnail);
 
-})
+        videodeletefromcloudinary(videopublicid);
+        deletefromcloudinary(thumbnailpublicid);
+       
+    } catch (error) {
+        return res.status(500).json(new ApiResponse(500, {}, "Error Deleting Files From S3"));
+    }
+
+    return res.status(200).json(new ApiResponse(200, {}, "Video Deleted Successfully"));
+});
 
 const togglePublishStatus = asyncHandeler(async (req, res) => {
     const videoId = req.params.id

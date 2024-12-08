@@ -134,29 +134,29 @@ function Upload() {
             <Headertwo />
             <Tabs isFitted variant='enclosed'>
                 <TabList mb='1em'>
-                    <Tab>Video</Tab>
-                    <Tab>Tweet</Tab>
+                    <Tab className="font-bold text-xl">Video</Tab>
+                    <Tab className="font-bold text-xl">Tweet</Tab>
                 </TabList>
                 <TabPanels>
                     <TabPanel>
-                        <div className="flex flex-col justify-center py-6 sm:px-6 lg:px-8">
+                        <div className="flex flex-col justify-center py-3 sm:px-6">
                             <div className="sm:mx-auto sm:w-full sm:max-w-md">
-                                <div className="bg-white dark:bg-black dark:text-white text-black py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                                <div className="bg-white dark:bg-black dark:text-white text-black py-8  shadow sm:rounded-lg px-4">
                                     <form method="POST" action="#" onSubmit={handleVideoUpload}>
-                                        <h2 className="text-2xl mb-3 font-bold leading-tight">
+                                        <h2 className="text-2xl mb-3 text-center font-bold leading-tight">
                                             Upload Video
                                         </h2>
                                         <div>
-                                            <label className="block text-sm font-medium" htmlFor="title">
+                                            <label className="block text-xl  font-bold" htmlFor="title">
                                                 Title
                                             </label>
                                             <div className="mt-1">
-                                                <input className="appearance-none block dark:bg-black dark:text-white text-black w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required type="text" name="tittle" id="tittle" />
+                                                <input className="appearance-none block dark:bg-black dark:text-white text-black w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" required type="text" name="tittle" id="tittle" />
                                             </div>
                                         </div>
 
                                         <div className="mt-6">
-                                            <label className="block text-sm font-medium" htmlFor="description">
+                                            <label className="block text-xl font-bold" htmlFor="description">
                                                 Description
                                             </label>
                                             <div className="mt-1">
@@ -165,16 +165,16 @@ function Upload() {
                                         </div>
 
                                         <div className="mt-6">
-                                            <label className="block text-sm font-medium" htmlFor="tags">
+                                            <label className="block text-xl font-bold" htmlFor="tags">
                                                 Tags
                                             </label>
                                             <div className="mt-1">
-                                                <input className="appearance-none dark:bg-black dark:text-white text-black block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required type="text" name="tegs" id="tegs" />
+                                                <input placeholder='Pls Write Like This viral,video,music' className="appearance-none  dark:bg-black dark:text-white text-black block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-xl" required type="text" name="tegs" id="tegs" />
                                             </div>
                                         </div>
 
                                         <div className="flex items-center justify-left mt-6">
-                                            <span className="mr-3 font-medium">isPublished:</span>
+                                            <span className="mr-3 font-bold">isPublished:</span>
                                             <label className="inline-flex items-center">
                                                 <input type="radio" className="form-radio dark:bg-black h-5 w-5 text-pink-600" name="isPublished" value="true" required />
                                                 <span className="ml-2">True</span>
@@ -185,9 +185,9 @@ function Upload() {
                                             </label>
                                         </div>
 
-                                        <div className="flex  items-center justify-center mt-6">
+                                        <div className="flex   flex-col  items-left justify-left mt-6">
                                             <div className="flex items-center justify-between mt-3">
-                                                <label className="text-base font-medium dark:text-white text-black">
+                                                <label className="text-base font-bold dark:text-white text-black">
                                                     Thumbnail
                                                 </label>
                                             </div>
@@ -196,9 +196,9 @@ function Upload() {
                                             </div>
                                         </div>
 
-                                        <div className="flex items-center justify-center mt-6">
+                                        <div className="flex flex-col  items-left justify-left mt-6">
                                             <div className="flex items-center justify-between mt-3">
-                                                <label className="text-base font-medium dark:text-white text-black">
+                                                <label className="text-base font-bold dark:text-white text-black">
                                                     Video
                                                 </label>
                                             </div>
@@ -217,7 +217,7 @@ function Upload() {
                                         </div>
 
                                         <div className="mt-6">
-                                            <button className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
+                                            <button className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
                                                 {videoLoading ? <Spinner size="sm" /> : 'Upload Video'}
                                             </button>
                                         </div>
@@ -238,16 +238,16 @@ function Upload() {
                                 <div className="flex items-center justify-center my-3">
                                     <div className="xl:mx-auto shadow-md p-4 xl:w-full xl:max-w-sm 2xl:max-w-md">
                                         <div className="mb-2"></div>
-                                        <h2 className="text-2xl font-bold leading-tight">
+                                        <h2 className="text-2xl text-center font-bold leading-tight">
                                             Upload Tweet
                                         </h2>
                                         <form className="mt-5" onSubmit={handleTweetUpload}>
-                                            <div className="space-y-4">
-                                                <div>
-                                                    <label className="text-base font-medium dark:text-white text-gray-900">
-                                                        Your Text
+                                            <div className=" space-y-4">
+                                                <div className='gap-4'>
+                                                    <label className="text-base font-bold py-4  dark:text-white text-gray-900">
+                                                        Caption
                                                     </label>
-                                                    <textarea placeholder="Pata Hai Ajj kya Huva ?" className="dark:bg-black bg-gray-100 w-full dark:text-white text-gray-800 border-0 rounded-md p-2 mb-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" name="content" required></textarea>
+                                                    <textarea placeholder="Pata Hai Ajj kya Huva ?" className="dark:bg-black bg-gray-100 w-full dark:text-white text-gray-800 border-0 rounded-md p-2 my-4 focus:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500 transition ease-in-out duration-150" name="content" required></textarea>
 
                                                 </div>
                                                 <div className='mt-2'>
@@ -255,7 +255,7 @@ function Upload() {
                                                 </div>
                                                 <div>
                                                     <div className="flex items-center justify-between mt-3">
-                                                        <label className="text-base dark:text-white font-medium text-gray-900">
+                                                        <label className="text-base dark:text-white  font-bold  text-gray-900">
                                                             Tweet Picture
                                                         </label>
                                                     </div>
