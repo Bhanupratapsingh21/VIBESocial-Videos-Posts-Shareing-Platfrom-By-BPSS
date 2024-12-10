@@ -165,7 +165,7 @@ function IndividualVideo() {
 
         try {
             const response = await axios.get(`${import.meta.env.VITE_URL}/api/v1/videos/getvideo/${videoid}`, { withCredentials: true });
-            //console.log(response)
+            console.log(response)
             const videoData = response.data.data;
 
             videoData.video.videoFile.cloudinaryUrl = extractIdFromUrl(videoData?.video.videoFile.cloudinaryUrl);
@@ -178,7 +178,7 @@ function IndividualVideo() {
             setSubscribe(videoData.channelsubscribestate);
             //console.log(videoData.channelsubscribestate);
         } catch (error) {
-            //console.error(error);
+            console.error(error);
             setError(error.response?.data?.errors || 'An unexpected error occurred.');
             toast({
                 title: error.response?.data?.errors || "An unexpected error occurred.",
