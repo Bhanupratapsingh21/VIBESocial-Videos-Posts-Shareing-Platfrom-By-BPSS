@@ -15,7 +15,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import axios from 'axios';
-
+import formatViews from "../utils/parseviews.js"
 function IndiVideo({ video, status, userdata }) {
     const [userplaylists, setuserplaylists] = useState([]);
     const toast = useToast();
@@ -144,17 +144,17 @@ function IndiVideo({ video, status, userdata }) {
                             alt="Video Thumbnail"
                         />
                     </div>
-                    <div className="flex justify-between items-center pr-2 pt-2 h-16 space-x-2">
+                    <div className="flex justify-between items-center pr-2 pt-2 sm:h-20 h-16 space-x-2">
                         <Link className='flex gap-1 justify-left items-center' to={`/user/userprofile/${video.ownerusername}`}>
                             <div className="flex  px-2 ">
                                 <img className="h-10 max-w-10 max-h-10 w-10 rounded-full" src={video.owneravatar} alt="img" />
                             </div>
-                            <div className="flex flex-col gap-2 sm:gap-0 justify-center max-w-[235px]">
-                                <div className="dark:text-white text-sm sm:text-lg text-black overflow-hidden max-h-[45px] -mb-2 sm:-mb-0">{video.tittle}</div>
+                            <div className="flex flex-col sm:py-4 gap-2 sm:gap-0 justify-center max-w-[235px]">
+                                <div className="dark:text-white text-sm sm:text-lg text-black font-semibold overflow-hidden sm:max-h-[55px] max-h-[40px] -mb-2 sm:-mb-0">{video.tittle}</div>
                                 <div className="flex dark:text-gray-400 font-medium justify-left text-sm sm:text-base items-center">
                                     <span className="max-w-[115px] max-h-[25px]  overflow-hidden">{video.ownerusername}</span>
                                     <span className='px-1'> • </span>
-                                    <span className="max-h-[25px]">{video.views} views</span>
+                                    <span className="max-h-[25px]">{formatViews(video.views)} views</span>
                                 </div>
                             </div>
                         </Link>

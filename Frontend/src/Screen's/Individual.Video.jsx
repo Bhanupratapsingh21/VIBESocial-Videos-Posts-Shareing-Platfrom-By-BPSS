@@ -25,8 +25,10 @@ import {
     AlertDialogCloseButton,
     useDisclosure
 } from "@chakra-ui/react";
+import { IconCaretUpFilled, IconCaretDownFilled, IconArrowIteration } from "@tabler/icons-react"
 import CommentsLayout from "../Components/Comments.leylot";
 import LoadingComment from "../Components/Commentsloader";
+import formatViews from "../utils/parseviews.js"
 import Headertwo from "../Components/Header2";
 import VideosLeyout from "../Components/Videosleylot";
 import Loadingvideo from "../Components/Videosloading";
@@ -407,17 +409,11 @@ function IndividualVideo() {
                             <div>
 
                                 <div className="hidden lg:block lg:-mr-6 z-54 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
-                                    <div className="flex text-lg justify-between px-4 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
-                                        <h2 className="font-bold">Comments</h2>
+                                    <div className="flex text-lg justify-between px-1 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
+                                        <h2 className="font-semibold">Comments</h2>
                                         <div>
-                                            <svg viewBox="0 0 360 360" className="mt-1 dark:fill-white" width={15} xml:space="preserve">
-                                                <g id="SVGRepo_iconCarrier">
-                                                    <path
-                                                        id="XMLID_225_"
-                                                        d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z"
-                                                    ></path>
-                                                </g>
-                                            </svg>
+                                            {viewcomment ? <IconCaretUpFilled /> : <IconCaretDownFilled />}
+
                                         </div>
 
                                     </div>
@@ -429,7 +425,7 @@ function IndividualVideo() {
                                             <input
                                                 type="text"
                                                 placeholder="Add Comment"
-                                                class="block font-bold lg:w-[24vw] w-80   rounded-xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950  placeholder:text-neutral-500 "
+                                                class="block font-semibold lg:w-[24vw] w-80   rounded-xl border dark:text-white  border-neutral-300 bg-transparent py-4 pl-6  text-base/6 text-neutral-950  placeholder:text-neutral-500 "
                                                 onChange={(e) => {
                                                     e.preventDefault();
                                                     setcommenttext(e.target.value);
@@ -448,14 +444,7 @@ function IndividualVideo() {
                                                     commentpostloading ? (
                                                         <Spinner size={"sm"} />
                                                     ) : (
-                                                        <svg viewBox="0 0 16 6" aria-hidden="true" class="w-4">
-                                                            <path
-                                                                fill="currentColor"
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M16 3 10 .5v2H0v1h10v2L16 3Z"
-                                                            ></path>
-                                                        </svg>
+                                                        <IconArrowIteration />
                                                     )
                                                 }
                                             </button>
@@ -464,11 +453,11 @@ function IndividualVideo() {
                                     {
                                         viewcomment && (
                                             <>
-                                                <div className="h-[250px]  overflow-y-scroll">
+                                                <div className="h-[250px] overflow-y-auto">
                                                     <CommentsLayout filterondeletecomments={filterondeletecomments} commentData={comments} />
                                                     {commentsloading && <LoadingComment totalNo={9} />}
                                                     <div ref={lastCommentElementRef} />
-                                                    {commentserror && <div className="flex justify-center w-72 text-center items-center">This Video Don't Have Any Comments</div>}
+                                                    {commentserror && <div className="flex justify-center  text-center items-center">This Video Don't Have Any Comments</div>}
                                                 </div>
                                             </>
                                         )
@@ -530,21 +519,21 @@ function IndividualVideo() {
                                         !iscloudinary && <div className="flex justify-center items-center w-full  gap-2  rounded-lg">
                                             <button
                                                 onClick={() => setresolution("240p")}
-                                                className={`cursor-pointer w-full  ${resolution === "240p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                                className={`cursor-pointer w-full  ${resolution === "240p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative text-white inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
                                             >
 
                                                 240P
                                             </button>
                                             <button
                                                 onClick={() => setresolution("460p")}
-                                                className={`cursor-pointer w-full  ${resolution === "460p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                                className={`cursor-pointer w-full  ${resolution === "460p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative text-white inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
                                             >
 
                                                 420P
                                             </button>
                                             <button
                                                 onClick={() => setresolution("720p")}
-                                                className={`cursor-pointer w-full  ${resolution === "720p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
+                                                className={`cursor-pointer w-full  ${resolution === "720p" ? "ring-2 ring-black ring-offset-2" : ""} bg-gray-800 relative text-white inline-flex items-center justify-center gap-2  text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50  h-9 rounded-md px-3`}
                                             >
                                                 720P
                                             </button>
@@ -558,7 +547,7 @@ function IndividualVideo() {
                                                 <AccordionButton>
                                                     <Box as='span' flex='1' textAlign='left'>
                                                         <h2 className="text-xl w-[70vw]  overflow-hidden">{video.video.tittle}</h2>
-                                                        <h2 className="text-sm text-gray-800 dark:text-gray-400">{video.video.views} Views</h2>
+                                                        <h2 className="text-sm text-gray-800 dark:text-gray-400">{formatViews(video.video.views)} Views</h2>
 
                                                     </Box>
                                                     <AccordionIcon />
@@ -566,7 +555,6 @@ function IndividualVideo() {
                                             </h2>
                                             <AccordionPanel>
                                                 <h2 className="text-sm -mt-2 w-[97vw] sm:w-96  overflow-hidden">Upload At {video.video.createdAt.slice(0, 10)}</h2>
-                                                <h2>Description : </h2>
                                                 <h2 className="text-sm text-gray-800 dark:text-white">{video.video.description}</h2>
                                             </AccordionPanel>
                                         </AccordionItem>
@@ -603,7 +591,7 @@ function IndividualVideo() {
                                                 )
                                             }
 
-                                            <span class="text-md ml-1 antialiased">{likecount} likes</span>
+                                            <span class="text-md ml-1 antialiased">{formatViews(likecount)} likes</span>
                                         </div>
                                         <div class="w-max inline-flex ml-4 items-center">
                                             <svg xmlns="http://www.w3.org/2000/svg" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">

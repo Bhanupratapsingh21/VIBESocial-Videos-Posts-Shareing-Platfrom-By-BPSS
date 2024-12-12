@@ -4,6 +4,7 @@ import TweetsLeyout from "../Components/TweetsLeylot.jsx";
 import Loadingvideo from "../Components/Videosloading.jsx";
 import { useSelector } from 'react-redux'
 import Headertwo from "../Components/Header2.jsx";
+import formatViews from "../utils/parseviews.js";
 function Tweets() {
     const { status, userdata } = useSelector((state) => state.auth);
     const [data, setData] = useState([]);

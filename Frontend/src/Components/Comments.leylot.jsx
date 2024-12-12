@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import formatViews from "../utils/parseviews.js"
 import {
     Modal,
     ModalOverlay,
@@ -103,21 +104,21 @@ function Comment({ comment, filterondeletecomments, status, userdata }) {
     };
 
     return (
-        <div key={comment._id} className="flex justify-center items-center mt-4 z-24 sm:min-w-72  gap-2 p-4">
+        <div key={comment._id} className="flex justify-center items-center mt-4 z-24 sm:min-w-72 gap-2 p-4">
 
             <Link to={`/user/userprofile/${comment.user.username}`} className="h-10 w-10 rounded-full">
                 <img className='rounded-full w-10 h-10' src={comment.user.avatar.url} alt={`${comment.user.username}'s avatar`} />
             </Link>
-            <Link to={`/user/userprofile/${comment.user.username}`} className=" h-14 flex-1">
+            <Link to={`/user/userprofile/${comment.user.username}`} className="h-14 w-[50%] flex-1">
                 <div className="mb-1 rounded-lg text-md">
                     <h4>{comment.user.username}</h4>
                 </div>
-                <div className="z-30 max-h-14 overflow-y-auto  text-sm">
+                <div className="max-h-14 max-w-[50%] overflow-y-auto text-sm">
                     <p>{comment.content}</p>
                 </div>
             </Link>
 
-            <div onClick={likecomment} className='flex justify-evenly items-center w-12'>
+            <div onClick={likecomment} className='flex justify-evenly w-12 items-center gap-2'>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
                     xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -134,7 +135,7 @@ function Comment({ comment, filterondeletecomments, status, userdata }) {
                         />
                     </g>
                 </svg>
-                {likecount}
+                {formatViews(likecount)}
             </div>
             <div>
                 {userdata.username === comment.user.username ? (
