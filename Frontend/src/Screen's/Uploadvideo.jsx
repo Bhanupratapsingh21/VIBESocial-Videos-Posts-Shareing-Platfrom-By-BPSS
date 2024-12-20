@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {
     Tabs,
@@ -7,15 +7,26 @@ import {
     Tab,
     TabPanel,
     Spinner,
+    Button,
     Alert,
     AlertIcon,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
     Progress,
     useToast,
+    useDisclosure,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 import Headertwo from '../Components/Header2';
 import { useSelector } from 'react-redux';
 function Upload() {
+    const { isOpen, onOpen, onClose } = useDisclosure()
+    const ISUPLOADON = import.meta.env.VITE_ISUPLOADON;
     const [videoLoading, setVideoLoading] = useState(false);
     const [videoProgress, setVideoProgress] = useState(0);
     const [tweetLoading, setTweetLoading] = useState(false);
@@ -58,7 +69,7 @@ function Upload() {
                     position: "top",
                     isClosable: true,
                 });
-                navigate("/videos")
+                navigate("/userchannelstatus")
             } catch (err) {
                 console.error(err);
                 setError(err.response?.data?.errors || 'An error occurred while uploading the video');
@@ -76,7 +87,20 @@ function Upload() {
             });
         }
     };
-
+    useEffect(() => {
+        if (ISUPLOADON === "false") {
+            toast({
+                title: "Upload Video's Feature is Disabled",
+                description: "It's very expensive to run video transcoders, so we have disabled this feature. You can Still Upload Tweets In Tweets Section . Please run locally by forking the repo to check features.",
+                status: "error",
+                duration: 2000,
+                position: "top",
+                isClosable: true,
+            });
+            navigate("")
+            onOpen();
+        }
+    }, [])
     const handleTweetUpload = async (e) => {
         e.preventDefault();
         if (status) {
@@ -216,11 +240,13 @@ function Upload() {
                                             </div>
                                         </div>
 
-                                        <div className="mt-6">
-                                            <button className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
-                                                {videoLoading ? <Spinner size="sm" /> : 'Upload Video'}
-                                            </button>
-                                        </div>
+                                        {ISUPLOADON === "true" && (
+                                            <div className="mt-6">
+                                                <button className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-xl font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
+                                                    {videoLoading ? <Spinner size="sm" /> : 'Upload Video'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </form>
                                     {videoLoading && (
                                         <div className="mt-4">
@@ -290,6 +316,21 @@ function Upload() {
                     {error}
                 </Alert>
             )}
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent className="dark:bg-black dark:text-white" >
+                    <ModalHeader>Note : </ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <p>It's very expensive to run video transcoders, so we have disabled this feature. You can Still Upload Tweets In Tweets Section . Please run locally by forking the repo to check features.</p>
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button colorScheme='purple' mr={3} onClick={onClose}>
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
         </>
     );
 }

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router"
 import { Link } from 'react-router-dom'
+import formatViews from "../utils/parseviews";
 function Userchannalstatus() {
     const navigate = useNavigate();
     const { status, userdata } = useSelector((state) => state.auth)
@@ -107,7 +108,7 @@ function Userchannalstatus() {
                                             </div>
                                             <div class="p-4 text-right">
                                                 <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Totel View's</p>
-                                                <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{data?.totalViews}</h4>
+                                                <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{data.totalViews ? formatViews(data?.totalViews) : 0}</h4>
                                             </div>
                                             <div class="border-t border-blue-gray-50 p-4">
                                                 <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
@@ -123,7 +124,7 @@ function Userchannalstatus() {
                                             </div>
                                             <div class="p-4 text-right">
                                                 <p class="block antialiased font-sans text-sm leading-normal font-normal text-blue-gray-600">Total Subscribers</p>
-                                                <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{data?.totalSubscribers}</h4>
+                                                <h4 class="block antialiased tracking-normal font-sans text-2xl font-semibold leading-snug text-blue-gray-900">{data.totalSubscribers ? formatViews(data?.totalSubscribers) : 0}</h4>
                                             </div>
                                             <div class="border-t border-blue-gray-50 p-4">
                                                 <p class="block antialiased font-sans text-base leading-relaxed font-normal text-blue-gray-600">
@@ -204,7 +205,7 @@ function Userchannalstatus() {
                                                                             </div>
                                                                         </td>
                                                                         <td class="py-3 px-5 border-b border-blue-gray-50">
-                                                                            <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">{video?.views}</p>
+                                                                            <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">{video.views ? formatViews(video.views) : 0}</p>
                                                                         </td>
                                                                         <td class="py-3 px-5 border-b border-blue-gray-50">
                                                                             <p class="block antialiased font-sans text-xs font-medium text-blue-gray-600">{video.tegs}</p>
@@ -218,8 +219,8 @@ function Userchannalstatus() {
                                                                         <td class="py-3 px-5 border-b border-blue-gray-50">
                                                                             {video.status === "Done" ? <Link to={`/editvideo/${video._id}`}>
                                                                                 Edit
-                                                                            </Link> : 
-                                                                            <h3>Wait Untill Status Got Done</h3>
+                                                                            </Link> :
+                                                                                <h3>Wait Untill Status Got Done</h3>
                                                                             }
                                                                         </td>
                                                                     </tr>
