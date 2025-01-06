@@ -380,12 +380,12 @@ function Tweet({ tweet, filterondelete, userdata, status, toast }) {
                                 <input
                                     type="text"
                                     placeholder="Add Comment"
-                                    class=" sm:-ml-32 w-[90vw] sm:w-[30vw] pl-4 flex flex-col items-center justify-center  rounded-2xl border dark:text-white  border-neutral-300 bg-transparent py-4 text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
+                                    class=" sm:-ml-32 w-[90vw] md:w-[27vw] pl-4 flex flex-col items-center justify-center  rounded-2xl border dark:text-white  border-neutral-300 bg-transparent py-4 text-base/6 text-neutral-950 ring-4 ring-transparent transition placeholder:text-neutral-500 focus:border-neutral-950 focus:outline-none focus:ring-neutral-950/5"
                                     onChange={(e) => setcommenttext(e.target.value)}
                                     value={commenttext}
                                 />
                             </form>
-                            <div class="absolute inset-y-1 right-4 flex justify-end">
+                            <div class="absolute  inset-y-1 right-4 flex justify-end">
                                 <button
                                     type="submit"
                                     onClick={postcomments}

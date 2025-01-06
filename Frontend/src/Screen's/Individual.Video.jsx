@@ -408,8 +408,8 @@ function IndividualVideo() {
 
                             <div>
 
-                                <div className="hidden lg:block lg:-mr-6 z-54 xl:w-80 lg:w-[25vw] w-80 -mt-4 m-4">
-                                    <div className="flex text-lg justify-between px-1 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
+                                <div className="hidden lg:block lg:-mr-6 z-54 lg:w-[25vw] w-80 -mt-4 m-4">
+                                    <div className="flex mb-2 lg:w-[25vw] w-80 text-lg justify-between px-1 h-10 items-center cursor-pointer" onClick={toggaleviewcomments} >
                                         <h2 className="font-semibold">Comments</h2>
                                         <div>
                                             {viewcomment ? <IconCaretUpFilled /> : <IconCaretDownFilled />}
@@ -417,7 +417,7 @@ function IndividualVideo() {
                                         </div>
 
                                     </div>
-                                    <div class="relative xl:w-80 mb-2 lg:w-[25vw] w-80 mt-2">
+                                    <div class="relative pl-2 mb-2 lg:w-[25vw] w-80 mt-2">
                                         <form onSubmit={(e) => {
                                             e.preventDefault();
                                             postcomments();

@@ -373,11 +373,11 @@ function Header() {
 
     return (
         <>
-            <header className="fixed w-full sm:ml-[500px]  bg-cyan-200 dark:bg-black dark:text-white  z-10">
+            <header className="fixed w-full sm:ml-[600px]  bg-cyan-200 dark:bg-black dark:text-white  z-10">
 
-                <div className="sm:w-[50vw] w-[100vw] px-2 h-20 flex items-center md:gap-32 justify-between  sm:px-8 dark:bg-black dark:text-white text-black">
+                <div className="md:w-[50vw] w-[100vw] px-2 h-20 flex items-center md:gap-32 justify-between  sm:px-8 dark:bg-black dark:text-white text-black">
 
-                    <IconMenu2 onClick={onOpen} className="md:hidden  text-black-700 right-2 dark:text-neutral-200 h-10 w-10 flex-shrink-0" />
+                    <IconMenu2 onClick={onOpen} className="sm:hidden  text-black-700 right-2 dark:text-neutral-200 h-10 w-10 flex-shrink-0" />
 
                     <div class="items-center justify-center xl:p-5">
                         <div className="flex items-center justify-center">
