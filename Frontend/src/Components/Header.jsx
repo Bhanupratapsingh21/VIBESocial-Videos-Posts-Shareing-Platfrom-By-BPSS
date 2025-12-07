@@ -373,7 +373,7 @@ function Header() {
 
     return (
         <>
-            <header className="fixed w-full sm:ml-[600px]  bg-cyan-200 dark:bg-black dark:text-white  z-10">
+            <header className="fixed w-full sm:ml-[20vw]  bg-cyan-200 dark:bg-black dark:text-white  z-10">
 
                 <div className="md:w-[50vw] w-[100vw] px-2 h-20 flex items-center md:gap-32 justify-between  sm:px-8 dark:bg-black dark:text-white text-black">
 
